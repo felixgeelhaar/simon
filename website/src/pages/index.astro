@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Features from '../components/Features.vue';
+const base = import.meta.env.BASE_URL;
 ---
 
 <Layout title="Simon - The Sorcerer of AI Governance">
@@ -8,13 +9,31 @@ import Features from '../components/Features.vue';
 	<script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.6.3/dist/bundle/asciinema-player.min.js" is:inline slot="head"></script>
 
 	<main>
-...
+		<!-- Hero Section -->
+		<section class="flex flex-col items-center justify-center py-20 text-center px-4 bg-gradient-to-b from-wizard-purple to-slate-900">
+			<h1 class="text-6xl font-black mb-6 tracking-tighter italic">
+				<span class="text-magic-green">SIMON</span>
+			</h1>
+			<p class="text-2xl text-wizard-glow font-bold mb-12 max-w-2xl uppercase tracking-widest">
+				Govern Your AI Agents with Wizardly Discipline
+			</p>
+
+			<div class="flex gap-4 mb-12">
+				<a href="https://github.com/felixgeelhaar/simon" class="bg-magic-green text-wizard-purple px-8 py-3 rounded-full font-black hover:bg-ancient-gold transition-colors">
+					STAR ON GITHUB
+				</a>
+				<a href="#architecture" class="border-2 border-wizard-glow text-wizard-glow px-8 py-3 rounded-full font-black hover:bg-wizard-glow/20 transition-all">
+					READ THE SPELLS
+				</a>
+			</div>
+			
 			<!-- Recording Container -->
 			<div class="w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl border-4 border-slate-800 relative group">
 				<div id="player" class="w-full h-full min-h-[400px]"></div>
-				<script is:inline>
+				<script is:inline define:vars={{ base }}>
 					window.addEventListener('load', function() {
-						AsciinemaPlayer.create('/simon/simon_demo.cast', document.getElementById('player'), {
+						const castPath = base.endsWith('/') ? `${base}simon_demo.cast` : `${base}/simon_demo.cast`;
+						AsciinemaPlayer.create(castPath, document.getElementById('player'), {
 							autoPlay: true,
 							loop: true,
 							speed: 1.5,
@@ -37,7 +56,7 @@ import Features from '../components/Features.vue';
 		</section>
 
 		<!-- Architecture Section -->
-		<section class="py-20 px-4 max-w-4xl mx-auto">
+		<section id="architecture" class="py-20 px-4 max-w-4xl mx-auto">
 			<div class="border-l-4 border-magic-green pl-8 py-4 bg-wizard-glow/10 rounded-r-lg">
 				<h2 class="text-3xl font-bold mb-6 gold-glow">Deterministic Control Plane</h2>
 				<p class="text-lg text-slate-300 mb-8 leading-relaxed">
