@@ -1,0 +1,57 @@
+{
+  "scan_time": "2026-01-19T09:55:50.995693Z",
+  "target": "/Users/felixgeelhaar/Developer/projects/simon",
+  "findings": [
+    {
+      "id": "finding-b44c756b0f0a06aa",
+      "type": "sast",
+      "engine_id": "staticcheck",
+      "rule_id": "compile",
+      "title": "module requires at least go1.25.6, but Staticcheck was built with go1.25.5",
+      "normalized_severity": "INFO",
+      "effective_severity": "INFO",
+      "confidence": "HIGH",
+      "reachability": "UNKNOWN",
+      "location": {
+        "file": "",
+        "line": 0,
+        "end_column": 20
+      },
+      "fingerprint": {
+        "value": "8eb85b2610c034aaebe8d9544854e143",
+        "version": "v1"
+      },
+      "metadata": {
+        "check_code": "compile"
+      },
+      "detected_at": "2026-01-19T09:55:43.916406Z"
+    },
+    {
+      "id": "finding-b738e88d98fd080e",
+      "type": "sast",
+      "engine_id": "gosec",
+      "rule_id": "G104",
+      "title": "Errors unhandled",
+      "normalized_severity": "LOW",
+      "effective_severity": "LOW",
+      "confidence": "HIGH",
+      "reachability": "UNKNOWN",
+      "location": {
+        "file": "/Users/felixgeelhaar/Developer/projects/simon/internal/store/sqlite.go",
+        "line": 39,
+        "column": 3,
+        "end_line": 39,
+        "end_column": 23
+      },
+      "fingerprint": {
+        "value": "31a38a6ae739770ceca01c7c54965608",
+        "version": "v1"
+      },
+      "cwe_id": "703",
+      "metadata": {
+        "snippet": "38: \tif err := store.initSchema(); err != nil {\n39: \t\tdb.Close()\n40: \t\treturn nil, err\n"
+      },
+      "detected_at": "2026-01-19T09:55:48.928438Z"
+    }
+  ]
+}

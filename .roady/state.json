@@ -1,0 +1,232 @@
+{
+  "project_id": "new-project",
+  "task_states": {
+    "task-advanced-context": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Implemented Vector Memory in SQLite",
+        "Added embedding support to all providers",
+        "Runtime retrieves relevant experiences at session start"
+      ]
+    },
+    "task-ci-cd-integration": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Implemented JSON output via bolt logger",
+        "Added --ci flag to CLI",
+        "Configured non-interactive mode"
+      ]
+    },
+    "task-cli-delegation": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Implemented CLIProvider to wrap local binary tools",
+        "Added --cli and --api flags to Simon CLI",
+        "Implemented auto-detection of local tools (claude, codex, gemini, llm)",
+        "Added persistent configuration for custom CLI paths"
+      ]
+    },
+    "task-constraints": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Implemented standard CLI with Cobra",
+        "Verified local-first execution via SQLite",
+        "Plugin architecture is prepped via Interfaces (Provider, etc.)"
+      ]
+    },
+    "task-core-architectural-decisions": {
+      "status": "done",
+      "path": "",
+      "owner": "felixgeelhaar"
+    },
+    "task-core-product-capabilities": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Implemented episodic execution loop in Runtime",
+        "Created Provider interface and MockProvider",
+        "Implemented Coach spec loading and validation",
+        "Integrated Guard policies",
+        "Implemented MCP Proxy for tool control"
+      ]
+    },
+    "task-design-goals": {
+      "status": "done",
+      "path": "",
+      "owner": "felixgeelhaar"
+    },
+    "task-grpc-plugins": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Defined proto contracts for Coach, Guard, Provider",
+        "Implemented Go-Plugin adapters for Coach",
+        "Verified gRPC communication via unit test"
+      ]
+    },
+    "task-high-level-architecture": {
+      "status": "done",
+      "path": "",
+      "owner": "felixgeelhaar"
+    },
+    "task-interactive-tui": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Implemented rich terminal UI using Bubbletea",
+        "Visualized status, iterations, logs, and progress",
+        "Activated via --interactive flag"
+      ]
+    },
+    "task-long-term-vision-(full-horizon)": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Defined Go interfaces for Coach, Guard, Provider, and Reducer plugins",
+        "Architecture is ready for gRPC/Plugin implementation"
+      ]
+    },
+    "task-marketing-site": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Website scaffolded in website/ using Astro + Vue."
+      ]
+    },
+    "task-marketing-website": {
+      "status": "verified",
+      "path": "website/",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Initialized Astro + Vue project in website/",
+        "Implemented 'Simon the Sorcerer' theme with Tailwind",
+        "Created GitHub Actions workflow for automatic deployment to GH Pages",
+        "Verified local build success"
+      ]
+    },
+    "task-multi-agent": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Scaffolded Planner/Executor/Reviewer agent topology",
+        "Defined MultiAgentOrchestrator interface"
+      ]
+    },
+    "task-non-goals": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Simon remains a CLI governance layer, not an IDE",
+        "Provider interfaces treat models as external workers",
+        "Iteration limits strictly prevent unlimited autonomous execution"
+      ]
+    },
+    "task-observability": {
+      "status": "done",
+      "path": "",
+      "owner": "felixgeelhaar"
+    },
+    "task-product-goals": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Demonstrated task completion via CLI with structured spec"
+      ]
+    },
+    "task-product-positioning": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Architecture explicitly separates Control Plane (Simon) from Worker (Provider)",
+        "Implemented strictly as an infra/governance layer, not an agent itself"
+      ]
+    },
+    "task-security-\u0026-safety-considerations": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Implemented file glob validation with doublestar and added unit tests",
+        "Mock execution of dangerous tools (shell) prevents accidental damage"
+      ]
+    },
+    "task-storage-model": {
+      "status": "done",
+      "path": "",
+      "owner": "felixgeelhaar"
+    },
+    "task-strategic-principles": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Outcomes over features: focus on runtime loop",
+        "Guardrails beat advice: Guard returns fatal errors",
+        "Context is scarce: MCP proxy digests outputs"
+      ]
+    },
+    "task-target-users": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "CLI interface matches power user expectations",
+        "Spec-driven workflow enables defined tasks"
+      ]
+    },
+    "task-the-problem-space": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Addressed prompt vagueness via Coach spec",
+        "Addressed context flood via MCP Proxy"
+      ]
+    },
+    "task-tool-gateway-(mcp-proxy)": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Implemented HandleToolCalls in Proxy",
+        "Integrated Proxy with Runtime loop",
+        "Verified tool output digestion and artifact storage"
+      ]
+    },
+    "task-user-problems": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Coach validation prevents vague prompts",
+        "Guard enforcement stops loops"
+      ]
+    },
+    "task-vision-statement": {
+      "status": "verified",
+      "path": "",
+      "owner": "felixgeelhaar",
+      "evidence": [
+        "Prototype demonstrates maximum work per session via enforced constraints"
+      ]
+    }
+  },
+  "updated_at": "2026-01-19T19:23:10.631455+01:00"
+}

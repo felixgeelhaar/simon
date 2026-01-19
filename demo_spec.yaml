@@ -1,0 +1,7 @@
+goal: "Analyze the performance of the login endpoint"
+definition_of_done: "A report is generated in docs/perf_login.md"
+constraints:
+  - "Do not modify production code"
+  - "Max 500 lines of logs"
+evidence:
+  - "docs/perf_login.md"

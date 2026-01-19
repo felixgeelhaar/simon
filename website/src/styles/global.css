@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --color-wizard-purple: #1a0b2e;
+  --color-wizard-glow: #7d56f4;
+  --color-magic-green: #39ff14;
+  --color-ancient-gold: #ffd700;
+}
+
+:root {
+  background-color: var(--color-wizard-purple);
+  color: #FAFAFA;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.magic-border {
+  border: 2px solid var(--color-magic-green);
+  box-shadow: 0 0 10px var(--color-magic-green);
+}
+
+.gold-glow {
+  color: var(--color-ancient-gold);
+  text-shadow: 0 0 5px var(--color-ancient-gold);
+}

@@ -1,0 +1,5 @@
+provider: openai
+model: gpt-4o
+max_retries: 0
+retry_delay_ms: 0
+timeout_sec: 0

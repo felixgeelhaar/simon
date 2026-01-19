@@ -1,0 +1,225 @@
+{
+  "id": "plan-analyzed-spec-1768756472",
+  "spec_id": "analyzed-spec",
+  "tasks": [
+    {
+      "id": "task-product-goals",
+      "title": "Implement Product Goals",
+      "description": "Implement the feature: Product Goals. Simon is successful when:\n\n- tasks complete in fewer conversational turns\n- long-running sessions do not require manual resets\n- tool-heavy workflows remain viable\n- users trust Simon to stop waste proactively\n\n---",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "product-goals"
+    },
+    {
+      "id": "task-user-problems",
+      "title": "Implement User Problems",
+      "description": "Implement the feature: User Problems. 1. Users waste turns clarifying vague prompts.\n2. Agents re-plan instead of executing.\n3. Tool outputs consume most of the context window.\n4. Long loops run past the point of usefulness.\n5. Users only realize cost problems after limits are hit.\n\n---",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "user-problems"
+    },
+    {
+      "id": "task-core-product-capabilities",
+      "title": "Implement Core Product Capabilities",
+      "description": "Implement the feature: Core Product Capabilities. ### 1. Coach (Pre-Execution)\n\n**User Outcome**\nFewer clarification turns.\n\n**Requirements**\n\n- Structured task specification:\n- Goal\n- Definition of Done\n- Constraints\n- Evidence\n- Deterministic prompt linting\n- Detection of missing signal (e.g. no DoD, no evidence)\n- Estimated usage / burn preview before execution\n\n**Out of Scope**\n\n- Generative prompt rewriting\n- Prompt experimentation tooling\n\n---\n\n### 2. Guard (Always-On Enforcement)\n\n**User Outcome**\nNo catastrophic waste.\n\n**Requirements**\n\n- Hard budgets for:\n- prompt size\n- evidence size\n- diffs\n- tool outputs\n- Scope enforcement:\n- allowed files\n- allowed commands\n- Iteration limits\n- Repeat-failure detection\n- Explicit stop conditions\n\nViolations block execution rather than warn.\n\n---\n\n### 3. Runtime (Segmented Execution Loop)\n\n**User Outcome**\nRun longer without context collapse.\n\n**Requirements**\n\n- Episodic execution (fresh model call per iteration)\n- Externalized state\n- Rolling session summary\n- Deterministic execution state machine\n- Verification-driven loops (tests, commands)\n\n---\n\n### 4. Tool Output Control (MCP Firewall)\n\n**User Outcome**\nTool tokens become manageable.\n\n**Requirements**\n\n- MCP proxy capability\n- Artifact storage for raw tool outputs\n- Digest + extract pattern\n- First-class support for:\n- Playwright\n- Chrome DevTools\n- logs and traces\n\n---",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "core-product-capabilities"
+    },
+    {
+      "id": "task-non-goals",
+      "title": "Implement Non-Goals",
+      "description": "Implement the feature: Non-Goals. Simon will not:\n\n- act as an IDE\n- replace AI models\n- perform silent refactors\n- run unlimited autonomous agents\n- bypass provider usage limits\n\n---",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "non-goals"
+    },
+    {
+      "id": "task-constraints",
+      "title": "Implement Constraints",
+      "description": "Implement the feature: Constraints. - Must work with existing CLIs\n- Local-first execution\n- Go-based implementation\n- Extensible via plugins\n- Graceful degradation when MCP is unavailable",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "constraints"
+    },
+    {
+      "id": "task-design-goals",
+      "title": "Implement Design Goals",
+      "description": "Implement the feature: Design Goals. - Deterministic behavior\n- Predictable cost and execution\n- Clear separation of concerns\n- Extensibility without core modification\n\n---",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "design-goals"
+    },
+    {
+      "id": "task-high-level-architecture",
+      "title": "Implement High-Level Architecture",
+      "description": "Implement the feature: High-Level Architecture. User\n└── Simon CLI / TUI\n└── Coach\n└── Guard (Policy Engine)\n└── Runtime Engine\n├── Provider Adapter\n├── Tool Gateway (MCP Proxy)\n└── Artifact Store\n\n---\n\nLibraris we want to use:\n\n- felixgeelhaar/statekit # state\n- felixgeelhaar/fortify # Resilience\n- felixgeelhaar/bolt # high-efficient logging\n- felixgeelhaar/mcp-go # Only if needed",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "high-level-architecture"
+    },
+    {
+      "id": "task-core-architectural-decisions",
+      "title": "Implement Core Architectural Decisions",
+      "description": "Implement the feature: Core Architectural Decisions. ### Deterministic Control Plane\n\n- No LLMs in Simon’s control logic\n- Enforcement is rule-based\n- AI models are treated as external workers\n\n---\n\n### Episodic Execution Model\n\n- Each iteration is stateless from the model’s perspective\n- Session state persists on disk\n- Summaries replace growing transcripts\n\nThis prevents context window exhaustion.\n\n---\n\n### Policy as Code\n\n- Budgets and scopes are declarative\n- Policies evaluated before execution\n- Violations halt execution\n\n---\n\n### Plugin Architecture\n\n**Mechanism**\n\n- gRPC-based plugins (HashiCorp go-plugin style)\n\n**Extension Points**\n\n- Coach plugins\n- Context selectors\n- Tool output reducers\n- Loop strategies\n- Provider adapters\n\nPlugins are isolated, versioned, and optional.\n\n---",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "core-architectural-decisions"
+    },
+    {
+      "id": "task-grpc-plugins",
+      "title": "Implement gRPC Plugin System",
+      "description": "Implement the feature: gRPC Plugin System. Move from internal interfaces to a true gRPC-based plugin architecture using hashicorp/go-plugin.\nAllows extension of Coach and Guard logic in any language.",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "grpc-plugins"
+    },
+    {
+      "id": "task-advanced-context",
+      "title": "Implement Advanced Context Management",
+      "description": "Implement the feature: Advanced Context Management. Implement Vector Memory for retrieving past successful sessions.\nSupport Tree-of-Thoughts execution branching.",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "advanced-context"
+    },
+    {
+      "id": "task-ci-cd-integration",
+      "title": "Implement CI/CD Integration",
+      "description": "Implement the feature: CI/CD Integration. Headless execution mode for CI environments.\nStructured output (SARIF/JUnit).",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "ci-cd-integration"
+    },
+    {
+      "id": "task-interactive-tui",
+      "title": "Implement Interactive TUI",
+      "description": "Implement the feature: Interactive TUI. Rich terminal UI using bubbletea.\nReal-time cost tracking, live diffs, and interactive approvals.",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "interactive-tui"
+    },
+    {
+      "id": "task-multi-agent",
+      "title": "Implement Multi-Agent Orchestration",
+      "description": "Implement the feature: Multi-Agent Orchestration. Support for Planner/Executor/Reviewer agent topologies governed by Simon.",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "multi-agent"
+    },
+    {
+      "id": "task-marketing-site",
+      "title": "Implement Marketing Website",
+      "description": "Implement the feature: Marketing Website. A visually appealing marketing page to showcase Simon's capabilities.\n\n**Requirements**\n- Framework: Astro + Vue.\n- Design: Inspired by \"Simon the Sorcerer\" (Classic retro fantasy palette: deep purples, vibrant greens).\n- Content: Hero section with the Asciinema recording, feature grid, and technical architecture.\n- Deployment: Fully automated via GitHub Actions to GitHub Pages.",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "marketing-site"
+    },
+    {
+      "id": "task-tool-gateway-(mcp-proxy)",
+      "title": "Implement Tool Gateway (MCP Proxy)",
+      "description": "Implement the feature: Tool Gateway (MCP Proxy). - JSON-RPC interception\n- Raw tool outputs stored as artifacts\n- Reduced digests returned to runtime\n- Targeted extraction supported on demand\n\n---",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "tool-gateway-(mcp-proxy)"
+    },
+    {
+      "id": "task-storage-model",
+      "title": "Implement Storage Model",
+      "description": "Implement the feature: Storage Model. - SQLite:\n- sessions\n- state\n- artifact index\n- Filesystem:\n- raw artifacts\n- Markdown:\n- human-readable summaries\n\n---",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "storage-model"
+    },
+    {
+      "id": "task-observability",
+      "title": "Implement Observability",
+      "description": "Implement the feature: Observability. - Structured logs\n- OpenTelemetry spans per iteration\n- Deterministic replay supported\n\n---",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "observability"
+    },
+    {
+      "id": "task-security-\u0026-safety-considerations",
+      "title": "Implement Security \u0026 Safety Considerations",
+      "description": "Implement the feature: Security \u0026 Safety Considerations. - File and command scope enforcement\n- Plugin isolation boundaries\n- Explicit stop conditions for loops",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "security-\u0026-safety-considerations"
+    },
+    {
+      "id": "task-vision-statement",
+      "title": "Implement Vision Statement",
+      "description": "Implement the feature: Vision Statement. Simon enables developers to get the maximum real work done per AI session by enforcing clarity, discipline, and limits at runtime.\n\nSimon exists to make powerful AI tools usable longer, cheaper, and more predictably — without constant human babysitting.\n\n---",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "vision-statement"
+    },
+    {
+      "id": "task-the-problem-space",
+      "title": "Implement The Problem Space",
+      "description": "Implement the feature: The Problem Space. Modern AI coding tools are powerful but fragile.\n\nDevelopers lose time, money, and momentum because:\n\n- prompts are underspecified, leading to clarification thrash\n- agents repeatedly re-plan instead of executing\n- tool outputs (Playwright, Chrome DevTools, logs) flood context\n- long-running loops silently burn usage limits\n- there is no feedback before cost is incurred\n\nDiscipline today is:\n\n- manual\n- implicit\n- inconsistent\n- learned through failure\n\n---",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "the-problem-space"
+    },
+    {
+      "id": "task-target-users",
+      "title": "Implement Target Users",
+      "description": "Implement the feature: Target Users. ### Primary: Power Developers\n\n- Use Claude Code, Codex, or Gemini CLI daily\n- Run long debugging, refactors, or E2E workflows\n- Feel usage limits personally\n- Already skilled and disciplined, but constrained\n\n**Primary Job to Be Done**\nHelp me finish real tasks in fewer turns, without restarting sessions or micromanaging the agent.\n\n---\n\n### Secondary: Platform / Infrastructure Engineers\n\n- Exploring agents in automation, CI, and remediation\n- Need predictability, budgets, and safety\n- Optimize for reliability over cleverness\n\n**Primary Job to Be Done**\nMake agent behavior bounded, auditable, and cost-aware.\n\n---",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "target-users"
+    },
+    {
+      "id": "task-product-positioning",
+      "title": "Implement Product Positioning",
+      "description": "Implement the feature: Product Positioning. Simon is infrastructure for working with AI agents.\n\nSimon does not:\n\n- compete with AI models\n- replace IDEs\n- provide autonomous “magic agents”\n\nSimon governs how AI power is applied.\n\n---",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "product-positioning"
+    },
+    {
+      "id": "task-strategic-principles",
+      "title": "Implement Strategic Principles",
+      "description": "Implement the feature: Strategic Principles. 1. **Outcomes over features**\nIf it does not reduce wasted turns, tokens, or intervention, it does not ship.\n\n2. **Guardrails beat advice**\nWarnings are ignored. Enforcement changes behavior.\n\n3. **Runtime control over prompt cleverness**\nDiscipline must be systematic, not heroic.\n\n4. **Context is a scarce resource**\nTokens are treated like CPU or memory.\n\n5. **Humans stay in control**\nNo silent autonomy. Every loop has stop conditions.\n\n---",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "strategic-principles"
+    },
+    {
+      "id": "task-long-term-vision-(full-horizon)",
+      "title": "Implement Long-Term Vision (Full Horizon)",
+      "description": "Implement the feature: Long-Term Vision (Full Horizon). Over time, Simon evolves from:\n\n- a local developer runtime\n\ninto:\n\n- a shared policy and execution layer for AI-assisted work\n- usable in CI, automation, and remediation workflows\n- with consistent enforcement across environments\n\nSimon becomes an **infra primitive** for safe, cost-aware AI execution.",
+      "priority": "medium",
+      "estimate": "",
+      "depends_on": [],
+      "feature_id": "long-term-vision-(full-horizon)"
+    }
+  ],
+  "approval_status": "approved",
+  "created_at": "2026-01-18T18:14:32.199424+01:00",
+  "updated_at": "2026-01-19T19:23:25.283124+01:00"
+}

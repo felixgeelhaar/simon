@@ -1,0 +1,59 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Features from '../components/Features.vue';
+---
+
+<Layout title="Simon - The Sorcerer of AI Governance">
+	<main>
+		<!-- Hero Section -->
+		<section class="flex flex-col items-center justify-center py-20 text-center px-4 bg-gradient-to-b from-wizard-purple to-slate-900">
+			<h1 class="text-6xl font-black mb-6 tracking-tighter italic">
+				<span class="text-magic-green">SIMON</span>
+			</h1>
+			<p class="text-2xl text-wizard-glow font-bold mb-12 max-w-2xl uppercase tracking-widest">
+				Govern Your AI Agents with Wizardly Discipline
+			</p>
+			
+			<!-- Recording Container -->
+			<div class="w-full max-w-4xl aspect-video bg-black rounded-xl overflow-hidden shadow-2xl border-4 border-slate-800 relative">
+				<div class="absolute inset-0 flex items-center justify-center text-slate-500">
+					<div class="text-center">
+						<p class="text-xl font-mono mb-4">[ SIMON_DEMO.CAST ]</p>
+						<p class="text-sm opacity-50 italic">Asciinema player placeholder</p>
+					</div>
+				</div>
+				<!-- In production, we'd use: <asciinema-player src="/simon_demo.cast"></asciinema-player> -->
+			</div>
+		</section>
+
+		<!-- Features Section -->
+		<section class="py-20 bg-slate-900">
+			<div class="text-center mb-12">
+				<h2 class="text-4xl font-bold text-slate-100">The Sorcerer's Arsenal</h2>
+				<p class="text-slate-400 mt-4">Predictable, secure, and context-aware execution.</p>
+			</div>
+			<Features client:load />
+		</section>
+
+		<!-- Architecture Section -->
+		<section class="py-20 px-4 max-w-4xl mx-auto">
+			<div class="border-l-4 border-magic-green pl-8 py-4 bg-wizard-glow/10 rounded-r-lg">
+				<h2 class="text-3xl font-bold mb-6 gold-glow">Deterministic Control Plane</h2>
+				<p class="text-lg text-slate-300 mb-8 leading-relaxed">
+					Simon is not another model. It is an infrastructure layer that treats LLMs as probabilistic workers while keeping control logic strictly deterministic.
+				</p>
+				<pre class="bg-black/50 p-6 rounded font-mono text-sm text-magic-green border border-slate-800">
+$ simon run task.yaml --provider openai
+info: initializing guard...
+info: checking budget (tokens: 4000)...
+info: executing episode 1...
+				</pre>
+			</div>
+		</section>
+
+		<!-- Footer -->
+		<footer class="py-12 text-center text-slate-500 border-t border-slate-800">
+			<p>&copy; 2026 Simon AI. Built for Power Developers.</p>
+		</footer>
+	</main>
+</Layout>

@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "github.com/felixgeelhaar/simon/internal/plugin/proto";
+
+// Coach Service
+service Coach {
+  rpc Validate (ValidateRequest) returns (ValidateResponse);
+}
+
+message ValidateRequest {
+  string goal = 1;
+  string definition_of_done = 2;
+  repeated string constraints = 3;
+  repeated string evidence = 4;
+}
+
+message ValidateResponse {
+  bool valid = 1;
+  repeated string warnings = 2;
+  repeated string errors = 3;
+}
+
+// Guard Service
+service Guard {
+  rpc Check (CheckRequest) returns (CheckResponse);
+}
+
+message CheckRequest {
+  string action = 1; // e.g. "run_shell"
+  map<string, string> context = 2; // e.g. {"cmd": "rm -rf /"}
+}
+
+message CheckResponse {
+  bool allowed = 1;
+  string violation_rule = 2;
+  string violation_message = 3;
+}
+
+// Provider Service
+service Provider {
+  rpc Chat (ChatRequest) returns (ChatResponse);
+}
+
+message ChatRequest {
+  repeated Message messages = 1;
+}
+
+message Message {
+  string role = 1;
+  string content = 2;
+  // Simplified for proto
+}
+
+message ChatResponse {
+  string content = 1;
+  Usage usage = 2;
+}
+
+message Usage {
+  int32 prompt_tokens = 1;
+  int32 completion_tokens = 2;
+  int32 total_tokens = 3;
+}
