@@ -4,33 +4,26 @@ import Features from '../components/Features.vue';
 ---
 
 <Layout title="Simon - The Sorcerer of AI Governance">
-	<main>
-		<!-- Hero Section -->
-		<section class="flex flex-col items-center justify-center py-20 text-center px-4 bg-gradient-to-b from-wizard-purple to-slate-900">
-			<h1 class="text-6xl font-black mb-6 tracking-tighter italic">
-				<span class="text-magic-green">SIMON</span>
-			</h1>
-			<p class="text-2xl text-wizard-glow font-bold mb-12 max-w-2xl uppercase tracking-widest">
-				Govern Your AI Agents with Wizardly Discipline
-			</p>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/asciinema-player@3.6.3/dist/bundle/asciinema-player.css" slot="head" />
+	<script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.6.3/dist/bundle/asciinema-player.min.js" is:inline slot="head"></script>
 
-			<div class="flex gap-4 mb-12">
-				<a href="https://github.com/felixgeelhaar/simon" class="bg-magic-green text-wizard-purple px-8 py-3 rounded-full font-black hover:bg-ancient-gold transition-colors">
-					STAR ON GITHUB
-				</a>
-				<a href="#architecture" class="border-2 border-wizard-glow text-wizard-glow px-8 py-3 rounded-full font-black hover:bg-wizard-glow/20 transition-all">
-					READ THE SPELLS
-				</a>
-			</div>
-			
+	<main>
+...
 			<!-- Recording Container -->
-			<div class="w-full max-w-4xl aspect-video bg-black rounded-xl overflow-hidden shadow-2xl border-4 border-slate-800 relative group">
-				<div class="absolute inset-0 flex items-center justify-center text-slate-500 group-hover:text-magic-green transition-colors">
-					<div class="text-center">
-						<p class="text-xl font-mono mb-4 italic">[ SECURING_SESSION_RECORDING... ]</p>
-						<p class="text-xs opacity-50 uppercase tracking-widest">Asciinema player integration pending upload</p>
-					</div>
-				</div>
+			<div class="w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl border-4 border-slate-800 relative group">
+				<div id="player" class="w-full h-full min-h-[400px]"></div>
+				<script is:inline>
+					window.addEventListener('load', function() {
+						AsciinemaPlayer.create('/simon/simon_demo.cast', document.getElementById('player'), {
+							autoPlay: true,
+							loop: true,
+							speed: 1.5,
+							theme: 'monokai',
+							terminalFontSize: '14px',
+							terminalFontFamily: 'JetBrains Mono, monospace'
+						});
+					});
+				</script>
 			</div>
 		</section>
 
