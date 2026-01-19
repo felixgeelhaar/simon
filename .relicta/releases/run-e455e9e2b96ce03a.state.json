@@ -1,0 +1,32 @@
+{
+  "run_id": "run-e455e9e2b96ce03a",
+  "state": "versioned",
+  "head_sha": "d610b6aa3a8aa5d35c082c2c557d77370569bd01",
+  "plan_hash": "7f9e275cff509eec6209632a816a412c4c189a7ebeb6a6fef7dd0c668c9d9ec0",
+  "version_next": "0.1.0",
+  "steps": {},
+  "history": [
+    {
+      "At": "2026-01-19T19:40:31.874304+01:00",
+      "From": "draft",
+      "To": "planned",
+      "Event": "PLAN",
+      "Actor": "cli",
+      "Reason": "Release planned",
+      "Metadata": null
+    },
+    {
+      "At": "2026-01-19T19:40:31.875687+01:00",
+      "From": "planned",
+      "To": "versioned",
+      "Event": "BUMP",
+      "Actor": "cli",
+      "Reason": "Version applied",
+      "Metadata": {
+        "tag_name": "v0.1.0",
+        "version": "0.1.0"
+      }
+    }
+  ],
+  "updated_at": "2026-01-19T19:40:31+01:00"
+}

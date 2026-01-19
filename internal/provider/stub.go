@@ -14,30 +14,45 @@ func NewStubProvider() *StubProvider {
 	return &StubProvider{
 		Responses: []Response{
 			{
-				Content: "I will start the task.",
-				Usage: Usage{PromptTokens: 100, CompletionTokens: 20, TotalTokens: 120},
+				Content: "Analyzing goal and initializing governance guard...",
+				Usage:   Usage{PromptTokens: 100, CompletionTokens: 20, TotalTokens: 120},
 			},
 			{
-				Content: "Checking system status...",
+				Content: "Searching memory for relevant past experiences...",
+				Usage:   Usage{PromptTokens: 150, CompletionTokens: 25, TotalTokens: 175},
+			},
+			{
+				Content: "Checking environment health...",
 				ToolCalls: []ToolCall{
-					{ID: "call_1", Name: "run_shell", Args: `{"cmd": "echo hello"}`},
+					{ID: "call_1", Name: "run_shell", Args: `{"cmd": "ls -la"}`},
 				},
-				Usage: Usage{PromptTokens: 150, CompletionTokens: 30, TotalTokens: 180},
+				Usage: Usage{PromptTokens: 200, CompletionTokens: 30, TotalTokens: 230},
+			},
+			{
+				Content: "Executing primary implementation...",
+				ToolCalls: []ToolCall{
+					{ID: "call_2", Name: "run_shell", Args: `{"cmd": "echo 'wizardly output' > demo_task.yaml"}`},
+				},
+				Usage: Usage{PromptTokens: 250, CompletionTokens: 40, TotalTokens: 290},
+			},
+			{
+				Content: "Verifying evidence and finalizing session...",
+				Usage:   Usage{PromptTokens: 300, CompletionTokens: 20, TotalTokens: 320},
 			},
 			{
 				Content: "Task complete.",
-				Usage: Usage{PromptTokens: 200, CompletionTokens: 10, TotalTokens: 210},
+				Usage:   Usage{PromptTokens: 350, CompletionTokens: 10, TotalTokens: 360},
 			},
 		},
 	}
 }
 
 func (m *StubProvider) Chat(ctx context.Context, messages []Message) (*Response, error) {
-	// Simulate latency
+	// Cinematic latency
 	select {
 	case <-ctx.Done():
 		return nil, ctx.Err()
-	case <-time.After(10 * time.Millisecond):
+	case <-time.After(1500 * time.Millisecond):
 	}
 
 	if len(m.Responses) == 0 {

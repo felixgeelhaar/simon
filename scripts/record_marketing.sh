@@ -10,38 +10,25 @@ TEMP_HOME=$(mktemp -d)
 export HOME=$TEMP_HOME
 SIMON_BIN="./simon"
 
-# Build if missing
-if [ ! -f "$SIMON_BIN" ]; then
-    echo "Building Simon..."
-    go build -o simon cmd/simon/main.go
-fi
-
-# Configure API Key (using env var or prompt)
-if [ -z "$OPENAI_API_KEY" ]; then
-    echo "Error: OPENAI_API_KEY environment variable is not set."
-    exit 1
-fi
-
-echo "Configuring Simon..."
-$SIMON_BIN config set openai.api_key "$OPENAI_API_KEY"
+# Build Simon with the new cinematic stub
+echo "Building Simon with cinematic stub..."
+go build -o simon cmd/simon/main.go
 
 # 2. Prepare Demo Spec
-mkdir -p demo_project
 cat <<EOF > demo_task.yaml
-goal: "Create a Go script that lists all files and saves the count to 'output.txt'."
-definition_of_done: "'output.txt' exists and contains the count."
-evidence: ["output.txt"]
+goal: "Demonstrate Simon's wizardly governance."
+definition_of_done: "Done."
+evidence: ["demo_task.yaml"]
 EOF
 
 echo "--- READY FOR RECORDING ---"
-echo "Starting asciinema in 3 seconds..."
-sleep 3
+echo "Recording will capture TUI rendering..."
 
 # 3. Record Execution
-# We use -i for interactive TUI mode which is the most visual
-asciinema rec -c "$SIMON_BIN run demo_task.yaml -i --provider openai --model gpt-4o" simon_demo.cast
+# We wrap the command to add a 5 second pause at the end so viewers can see the 'Completed' status
+RECORD_CMD="$SIMON_BIN run demo_task.yaml -i --provider stub; sleep 5"
+
+asciinema rec --overwrite -c "$RECORD_CMD" simon_demo.cast
 
 echo "--- RECORDING COMPLETE ---"
 echo "Saved to: simon_demo.cast"
-echo "You can play it back with: asciinema play simon_demo.cast"
-echo "Or upload it to asciinema.org for a shareable link."

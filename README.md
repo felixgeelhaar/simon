@@ -84,6 +84,21 @@ Simon is built in Go and utilizes a plugin-ready architecture.
 
 ---
 
+## 🏗️ Deployment
+
+### GitHub Pages
+1. Go to **Settings > Pages** in your repository.
+2. Set **Source** to **GitHub Actions**.
+3. The site will deploy automatically to `https://felixgeelhaar.github.io/simon`.
+
+### Homebrew Tap
+Simon is distributed via a Homebrew Tap. To ensure the automated releases work:
+1. Create a repository named `homebrew-tap` (if not already existing).
+2. Add a repository secret named `HOMEBREW_TAP_TOKEN` with a Fine-grained PAT that has write access to your tap repository.
+3. Update `.github/workflows/release.yml` to use this token.
+
+---
+
 ## 🤝 Contributing
 
 We welcome contributions! Please check out our [Roadmap](.roady/spec.yaml) to see what we're building next.

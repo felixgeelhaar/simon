@@ -5,8 +5,8 @@
 *.so
 *.dylib
 bin/
-simon
-simon_e2e
+/simon
+/simon_e2e
 
 # Test binary, built with `go test -c`, not used here
 *.test
