@@ -1,0 +1,54 @@
+ai:
+    enabled: true
+    provider: openai
+    model: gpt-4o
+    apikey: ""
+    baseurl: ""
+    apiversion: ""
+    tone: professional
+    audience: developers
+    includeemoji: false
+    maxtokens: 2048
+    temperature: 0.7
+    timeout: 30s
+    retryattempts: 3
+changelog:
+    file: CHANGELOG.md
+    format: keep-a-changelog
+    repositoryurl: https://github.com/felixgeelhaar/simon
+    exclude:
+        - chore
+        - ci
+        - docs
+        - style
+        - test
+    categories:
+        build: Build System
+        feat: Features
+        fix: Bug Fixes
+        perf: Performance Improvements
+        refactor: Code Refactoring
+        revert: Reverts
+plugins:
+    - name: github
+      enabled: true
+      config:
+        draft: false
+    - name: goreleaser
+      enabled: true
+      config:
+        args: ["release", "--clean"]
+versioning:
+    strategy: conventional
+    tagprefix: v
+    gittag: true
+    gitpush: true
+workflow:
+    requireapproval: true
+    allowedbranches:
+        - main
+    requirecleanworkingtree: true
+    requireuptodate: false
+    dryrunbydefault: false
+    autocommitchangelog: true
+    changelogcommitmessage: 'chore(release): update changelog for ${version}'
