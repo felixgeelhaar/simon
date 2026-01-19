@@ -4,63 +4,54 @@ import Features from '../components/Features.vue';
 ---
 
 <Layout title="Simon - The Sorcerer of AI Governance">
-	<main class="w-full">
-		<!-- Hero Section -->
-		<section class="flex flex-col items-center justify-center py-20 text-center px-4 bg-gradient-to-b from-wizard-purple to-slate-900 w-full">
-			<h1 class="text-6xl font-black mb-6 tracking-tighter italic">
-				<span class="text-magic-green">SIMON</span>
-			</h1>
-			<p class="text-2xl text-wizard-glow font-bold mb-12 max-w-2xl uppercase tracking-widest">
-				Govern Your AI Agents with Wizardly Discipline
-			</p>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/asciinema-player@3.6.3/dist/bundle/asciinema-player.css" slot="head" />
+	<script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.6.3/dist/bundle/asciinema-player.min.js" is:inline slot="head"></script>
 
-			<div class="flex flex-wrap justify-center gap-4 mb-12">
-				<a href="https://github.com/felixgeelhaar/simon" class="bg-magic-green text-wizard-purple px-8 py-3 rounded-full font-black hover:bg-ancient-gold transition-colors">
+	<main class="w-full max-w-6xl px-4 py-12 flex flex-col items-center gap-24">
+		<!-- Hero Section -->
+		<section class="w-full text-center flex flex-col items-center gap-12">
+			<div class="space-y-4">
+				<h1 class="text-7xl font-black italic tracking-tighter">
+					<span class="text-magic-green">SIMON</span>
+				</h1>
+				<p class="text-xl text-wizard-glow font-bold uppercase tracking-[0.3em]">
+					Wizardly AI Governance Runtime
+				</p>
+			</div>
+
+			<div class="flex flex-wrap justify-center gap-6">
+				<a href="https://github.com/felixgeelhaar/simon" class="bg-magic-green text-wizard-purple px-10 py-4 rounded-full font-black text-lg hover:bg-ancient-gold transition-all hover:scale-105">
 					STAR ON GITHUB
 				</a>
-				<a href="#architecture" class="border-2 border-wizard-glow text-wizard-glow px-8 py-3 rounded-full font-black hover:bg-wizard-glow/20 transition-all">
-					READ THE SPELLS
+				<a href="#architecture" class="border-2 border-wizard-glow text-wizard-glow px-10 py-4 rounded-full font-black text-lg hover:bg-wizard-glow/20 transition-all">
+					THE ARCHITECTURE
 				</a>
 			</div>
 			
 			<!-- Recording Container -->
-			<div class="w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl border-4 border-slate-800 relative">
-				<div id="player" style="min-height: 400px; width: 100%;"></div>
-				<script is:inline>
-					// Wait for DOM
-					window.addEventListener('DOMContentLoaded', (event) => {
-						if (window.AsciinemaPlayer) {
-							AsciinemaPlayer.create('/simon/simon_demo.cast', document.getElementById('player'), {
-								autoPlay: true,
-								loop: true,
-								speed: 1.5,
-								theme: 'monokai'
-							});
-						}
-					});
-				</script>
+			<div class="w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(125,86,244,0.3)] border-4 border-slate-800">
+				<div id="player" class="w-full h-full"></div>
 			</div>
 		</section>
 
 		<!-- Features Section -->
-		<section class="py-20 bg-slate-900 w-full flex flex-col items-center">
-			<div class="text-center mb-12">
+		<section class="w-full">
+			<div class="text-center mb-16 space-y-2">
 				<h2 class="text-4xl font-bold text-slate-100">The Sorcerer's Arsenal</h2>
-				<p class="text-slate-400 mt-4">Predictable, secure, and context-aware execution.</p>
+				<p class="text-slate-400">Deterministic control for a probabilistic world.</p>
 			</div>
-			<div class="w-full max-w-6xl">
-				<Features client:load />
-			</div>
+			<Features client:load />
 		</section>
 
 		<!-- Architecture Section -->
-		<section id="architecture" class="py-20 px-4 max-w-4xl mx-auto w-full">
-			<div class="border-l-4 border-magic-green pl-8 py-4 bg-wizard-glow/10 rounded-r-lg">
-				<h2 class="text-3xl font-bold mb-6 gold-glow">Deterministic Control Plane</h2>
-				<p class="text-lg text-slate-300 mb-8 leading-relaxed">
-					Simon is not another model. It is an infrastructure layer that treats LLMs as probabilistic workers while keeping control logic strictly deterministic.
+		<section id="architecture" class="w-full max-w-4xl">
+			<div class="border-l-4 border-magic-green pl-12 py-8 bg-wizard-glow/5 rounded-r-2xl space-y-8">
+				<h2 class="text-3xl font-bold gold-glow">Deterministic Control Plane</h2>
+				<p class="text-xl text-slate-300 leading-relaxed">
+					Simon is not an agent. It is an infrastructure layer that governs execution. 
+					It treats LLMs as workers and enforces rules at the runtime level.
 				</p>
-				<pre class="bg-black/50 p-6 rounded font-mono text-sm text-magic-green border border-slate-800">
+				<pre class="bg-black/80 p-8 rounded-xl font-mono text-sm text-magic-green border border-slate-800 shadow-inner overflow-x-auto">
 $ simon run task.yaml --provider openai
 info: initializing guard...
 info: checking budget (tokens: 4000)...
@@ -70,8 +61,31 @@ info: executing episode 1...
 		</section>
 
 		<!-- Footer -->
-		<footer class="py-12 text-center text-slate-500 border-t border-slate-800 w-full">
-			<p>&copy; 2026 Simon AI. Built for Power Developers.</p>
+		<footer class="w-full py-12 text-center text-slate-600 border-t border-slate-800/50 mt-12">
+			<p>Built for Power Developers by <a href="https://github.com/felixgeelhaar" class="hover:text-magic-green underline underline-offset-4">Felix Geelhaar</a></p>
 		</footer>
 	</main>
+
+	<!-- Script at the end of body -->
+	<script is:inline>
+		function startPlayer() {
+			const el = document.getElementById('player');
+			if (window.AsciinemaPlayer && el) {
+				AsciinemaPlayer.create('/simon/simon_demo.cast', el, {
+					autoPlay: true,
+					loop: true,
+					speed: 1.2,
+					theme: 'monokai',
+					terminalFontSize: '15px'
+				});
+				console.log("Simon Player Initialized");
+			} else {
+				console.log("Waiting for Player library...");
+				setTimeout(startPlayer, 200);
+			}
+		}
+		// Try multiple triggers
+		startPlayer();
+		window.addEventListener('load', startPlayer);
+	</script>
 </Layout>
