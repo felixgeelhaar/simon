@@ -8,9 +8,9 @@ const base = import.meta.env.BASE_URL;
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/asciinema-player@3.6.3/dist/bundle/asciinema-player.css" slot="head" />
 	<script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.6.3/dist/bundle/asciinema-player.min.js" is:inline slot="head"></script>
 
-	<main>
+	<main class="w-full">
 		<!-- Hero Section -->
-		<section class="flex flex-col items-center justify-center py-20 text-center px-4 bg-gradient-to-b from-wizard-purple to-slate-900">
+		<section class="flex flex-col items-center justify-center py-20 text-center px-4 bg-gradient-to-b from-wizard-purple to-slate-900 w-full">
 			<h1 class="text-6xl font-black mb-6 tracking-tighter italic">
 				<span class="text-magic-green">SIMON</span>
 			</h1>
@@ -18,7 +18,7 @@ const base = import.meta.env.BASE_URL;
 				Govern Your AI Agents with Wizardly Discipline
 			</p>
 
-			<div class="flex gap-4 mb-12">
+			<div class="flex flex-wrap justify-center gap-4 mb-12">
 				<a href="https://github.com/felixgeelhaar/simon" class="bg-magic-green text-wizard-purple px-8 py-3 rounded-full font-black hover:bg-ancient-gold transition-colors">
 					STAR ON GITHUB
 				</a>
@@ -33,21 +33,26 @@ const base = import.meta.env.BASE_URL;
 				<script is:inline define:vars={{ base }}>
 					window.addEventListener('load', function() {
 						const castPath = base.endsWith('/') ? `${base}simon_demo.cast` : `${base}/simon_demo.cast`;
-						AsciinemaPlayer.create(castPath, document.getElementById('player'), {
-							autoPlay: true,
-							loop: true,
-							speed: 1.5,
-							theme: 'monokai',
-							terminalFontSize: '14px',
-							terminalFontFamily: 'JetBrains Mono, monospace'
-						});
+						console.log("Loading cast from:", castPath);
+						if (window.AsciinemaPlayer) {
+							AsciinemaPlayer.create(castPath, document.getElementById('player'), {
+								autoPlay: true,
+								loop: true,
+								speed: 1.5,
+								theme: 'monokai',
+								terminalFontSize: '14px',
+								terminalFontFamily: 'JetBrains Mono, monospace'
+							});
+						} else {
+							console.error("AsciinemaPlayer not loaded");
+						}
 					});
 				</script>
 			</div>
 		</section>
 
 		<!-- Features Section -->
-		<section class="py-20 bg-slate-900">
+		<section class="py-20 bg-slate-900 w-full">
 			<div class="text-center mb-12">
 				<h2 class="text-4xl font-bold text-slate-100">The Sorcerer's Arsenal</h2>
 				<p class="text-slate-400 mt-4">Predictable, secure, and context-aware execution.</p>
@@ -56,7 +61,7 @@ const base = import.meta.env.BASE_URL;
 		</section>
 
 		<!-- Architecture Section -->
-		<section id="architecture" class="py-20 px-4 max-w-4xl mx-auto">
+		<section id="architecture" class="py-20 px-4 max-w-4xl mx-auto w-full">
 			<div class="border-l-4 border-magic-green pl-8 py-4 bg-wizard-glow/10 rounded-r-lg">
 				<h2 class="text-3xl font-bold mb-6 gold-glow">Deterministic Control Plane</h2>
 				<p class="text-lg text-slate-300 mb-8 leading-relaxed">
@@ -72,7 +77,7 @@ info: executing episode 1...
 		</section>
 
 		<!-- Footer -->
-		<footer class="py-12 text-center text-slate-500 border-t border-slate-800">
+		<footer class="py-12 text-center text-slate-500 border-t border-slate-800 w-full">
 			<p>&copy; 2026 Simon AI. Built for Power Developers.</p>
 		</footer>
 	</main>
