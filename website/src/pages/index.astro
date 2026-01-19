@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Features from '../components/Features.vue';
-const base = import.meta.env.BASE_URL;
 ---
 
 <Layout title="Simon - The Sorcerer of AI Governance">
@@ -30,11 +29,14 @@ const base = import.meta.env.BASE_URL;
 			<!-- Recording Container -->
 			<div class="w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl border-4 border-slate-800 relative group">
 				<div id="player" class="w-full h-full min-h-[400px]"></div>
-				<script is:inline define:vars={{ base }}>
+				<script is:inline>
+					// Wait for DOM and Player script
 					window.addEventListener('load', function() {
-						const castPath = base.endsWith('/') ? `${base}simon_demo.cast` : `${base}/simon_demo.cast`;
-						console.log("Loading cast from:", castPath);
-						if (window.AsciinemaPlayer) {
+						// Path is relative to the domain root since we know the deployment structure
+						const castPath = '/simon/simon_demo.cast';
+						console.log("Initializing Simon Demo from:", castPath);
+						
+						if (typeof AsciinemaPlayer !== 'undefined') {
 							AsciinemaPlayer.create(castPath, document.getElementById('player'), {
 								autoPlay: true,
 								loop: true,
@@ -44,7 +46,7 @@ const base = import.meta.env.BASE_URL;
 								terminalFontFamily: 'JetBrains Mono, monospace'
 							});
 						} else {
-							console.error("AsciinemaPlayer not loaded");
+							console.error("AsciinemaPlayer library not found in window scope");
 						}
 					});
 				</script>
