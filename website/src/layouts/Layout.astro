@@ -6,8 +6,6 @@ interface Props {
 }
 
 const { title } = Astro.props;
-const base = import.meta.env.BASE_URL;
-const faviconPath = base.endsWith('/') ? `${base}favicon.svg` : `${base}/favicon.svg`;
 ---
 
 <!doctype html>
@@ -16,12 +14,15 @@ const faviconPath = base.endsWith('/') ? `${base}favicon.svg` : `${base}/favicon
 		<meta charset="UTF-8" />
 		<meta name="description" content="Simon - AI Agent Governance Runtime" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href={faviconPath} />
+		<link rel="icon" type="image/svg+xml" href="/simon/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
-		<slot name="head" />
+		
+		<!-- Asciinema Player -->
+		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/asciinema-player@3.6.3/dist/bundle/asciinema-player.css" />
+		<script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.6.3/dist/bundle/asciinema-player.min.js"></script>
 	</head>
-	<body class="bg-wizard-purple min-h-screen text-slate-100 flex flex-col items-center overflow-x-hidden">
+	<body class="bg-wizard-purple min-h-screen text-slate-100">
 		<slot />
 	</body>
 </html>

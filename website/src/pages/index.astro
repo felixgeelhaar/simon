@@ -4,9 +4,6 @@ import Features from '../components/Features.vue';
 ---
 
 <Layout title="Simon - The Sorcerer of AI Governance">
-	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/asciinema-player@3.6.3/dist/bundle/asciinema-player.css" slot="head" />
-	<script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.6.3/dist/bundle/asciinema-player.min.js" is:inline slot="head"></script>
-
 	<main class="w-full">
 		<!-- Hero Section -->
 		<section class="flex flex-col items-center justify-center py-20 text-center px-4 bg-gradient-to-b from-wizard-purple to-slate-900 w-full">
@@ -27,26 +24,18 @@ import Features from '../components/Features.vue';
 			</div>
 			
 			<!-- Recording Container -->
-			<div class="w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl border-4 border-slate-800 relative group">
-				<div id="player" class="w-full h-full min-h-[400px]"></div>
+			<div class="w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl border-4 border-slate-800 relative">
+				<div id="player" style="min-height: 400px; width: 100%;"></div>
 				<script is:inline>
-					// Wait for DOM and Player script
-					window.addEventListener('load', function() {
-						// Path is relative to the domain root since we know the deployment structure
-						const castPath = '/simon/simon_demo.cast';
-						console.log("Initializing Simon Demo from:", castPath);
-						
-						if (typeof AsciinemaPlayer !== 'undefined') {
-							AsciinemaPlayer.create(castPath, document.getElementById('player'), {
+					// Wait for DOM
+					window.addEventListener('DOMContentLoaded', (event) => {
+						if (window.AsciinemaPlayer) {
+							AsciinemaPlayer.create('/simon/simon_demo.cast', document.getElementById('player'), {
 								autoPlay: true,
 								loop: true,
 								speed: 1.5,
-								theme: 'monokai',
-								terminalFontSize: '14px',
-								terminalFontFamily: 'JetBrains Mono, monospace'
+								theme: 'monokai'
 							});
-						} else {
-							console.error("AsciinemaPlayer library not found in window scope");
 						}
 					});
 				</script>
@@ -54,12 +43,14 @@ import Features from '../components/Features.vue';
 		</section>
 
 		<!-- Features Section -->
-		<section class="py-20 bg-slate-900 w-full">
+		<section class="py-20 bg-slate-900 w-full flex flex-col items-center">
 			<div class="text-center mb-12">
 				<h2 class="text-4xl font-bold text-slate-100">The Sorcerer's Arsenal</h2>
 				<p class="text-slate-400 mt-4">Predictable, secure, and context-aware execution.</p>
 			</div>
-			<Features client:load />
+			<div class="w-full max-w-6xl">
+				<Features client:load />
+			</div>
 		</section>
 
 		<!-- Architecture Section -->
