@@ -14,14 +14,17 @@ const faviconPath = base.endsWith('/') ? `${base}favicon.svg` : `${base}/favicon
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="description" content="Simon - AI Agent Governance Runtime" />
-		<meta name="viewport" content="width=device-width" />
+		<meta
+			name="description"
+			content="Simon is the deterministic control plane for AI agent execution, enforcing budgets, safety, and measurable delivery."
+		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href={faviconPath} />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		<slot name="head" />
 	</head>
-	<body class="bg-wizard-purple min-h-screen text-slate-100 flex flex-col items-center">
+	<body class="min-h-screen">
 		<slot />
 	</body>
 </html>
