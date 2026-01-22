@@ -45,10 +45,17 @@ body {
   justify-content: stretch;
 }
 
+#player {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+}
+
 .cast-player .asciinema-player,
+.cast-player .ap-wrapper,
 .cast-player .ap-player,
 .cast-player .ap-terminal {
-  width: 100%;
+  width: 100% !important;
   height: 100%;
 }
 
