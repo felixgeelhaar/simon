@@ -11,8 +11,11 @@ export HOME=$TEMP_HOME
 SIMON_BIN="./simon"
 
 # 1.1 Provider config
-RECORD_PROVIDER=${RECORD_PROVIDER:-openai}
+RECORD_PROVIDER=${RECORD_PROVIDER:-stub}
 RECORD_MODEL=${RECORD_MODEL:-gpt-4o}
+RECORD_COLS=${RECORD_COLS:-120}
+RECORD_ROWS=${RECORD_ROWS:-34}
+RECORD_OUTPUT=${RECORD_OUTPUT:-website/public/simon_demo.cast}
 
 if [[ "$RECORD_PROVIDER" == "openai" && -z "${OPENAI_API_KEY}" ]]; then
   echo "OPENAI_API_KEY must be set for provider=openai"
@@ -25,8 +28,8 @@ go build -o simon cmd/simon/main.go
 
 # 2. Prepare Demo Spec
 cat <<EOF > demo_task.yaml
-goal: "Record Simon enforcing budgets, evidence, and verification with the stub provider."
-definition_of_done: "Session completes after evidence verification and memory archiving."
+goal: "Create a hello world Go CLI application with proper project structure."
+definition_of_done: "A working Go module with main.go that prints 'Hello, Simon!' when executed."
 evidence: ["demo_task.yaml"]
 EOF
 
@@ -35,9 +38,9 @@ echo "Recording will capture TUI rendering..."
 
 # 3. Record Execution
 # We wrap the command to add a 5 second pause at the end so viewers can see the 'Completed' status
-RECORD_CMD="$SIMON_BIN run demo_task.yaml -i --provider $RECORD_PROVIDER --model $RECORD_MODEL; sleep 5"
+RECORD_CMD="clear; $SIMON_BIN run demo_task.yaml -i --provider $RECORD_PROVIDER --model $RECORD_MODEL; sleep 5"
 
-asciinema rec --overwrite -c "$RECORD_CMD" simon_demo.cast
+asciinema rec --overwrite --cols "$RECORD_COLS" --rows "$RECORD_ROWS" -c "$RECORD_CMD" "$RECORD_OUTPUT"
 
 echo "--- RECORDING COMPLETE ---"
-echo "Saved to: simon_demo.cast"
+echo "Saved to: $RECORD_OUTPUT"

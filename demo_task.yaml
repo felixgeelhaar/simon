@@ -1,1 +1,3 @@
-wizardly output
+goal: "Create a hello world Go CLI application with proper project structure."
+definition_of_done: "A working Go module with main.go that prints 'Hello, Simon!' when executed."
+evidence: ["demo_task.yaml"]

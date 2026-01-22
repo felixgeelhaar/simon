@@ -3,28 +3,53 @@ import '../styles/global.css';
 
 interface Props {
 	title: string;
+	description?: string;
+	image?: string;
 }
 
-const { title } = Astro.props;
+const {
+	title,
+	description = "Simon is the deterministic control plane for AI agent execution, enforcing budgets, safety, and measurable delivery.",
+	image = "/og-image.png"
+} = Astro.props;
+
 const base = import.meta.env.BASE_URL;
 const faviconPath = base.endsWith('/') ? `${base}favicon.svg` : `${base}/favicon.svg`;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://felixgeelhaar.github.io/simon');
+const ogImageURL = new URL(image, canonicalURL.origin);
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta
-			name="description"
-			content="Simon is the deterministic control plane for AI agent execution, enforcing budgets, safety, and measurable delivery."
-		/>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content={description} />
+		<meta name="theme-color" content="#0b061d" />
 		<link rel="icon" type="image/svg+xml" href={faviconPath} />
+		<link rel="canonical" href={canonicalURL} />
 		<meta name="generator" content={Astro.generator} />
+
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={ogImageURL} />
+		<meta property="og:site_name" content="Simon" />
+
+		<!-- Twitter -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:url" content={canonicalURL} />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={ogImageURL} />
+
 		<title>{title}</title>
 		<slot name="head" />
 	</head>
 	<body class="min-h-screen">
+		<a href="#main-content" class="skip-link">Skip to main content</a>
 		<slot />
 	</body>
 </html>

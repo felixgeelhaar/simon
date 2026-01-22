@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --color-ink: #040214;
-  --color-midnight: #0f101f;
-  --color-aurora: #7d56f4;
-  --color-lumina: #3ae4ff;
-  --color-sunstone: #ffd05b;
-  --color-emerald: #29fa9f;
+  --color-ink: #0b061d;
+  --color-midnight: #120b2b;
+  --color-royal: #5a2e8a;
+  --color-arcane: #2cc7c7;
+  --color-gold: #f4c14b;
+  --color-rose: #d64a7a;
   color: #f5f5ff;
   font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
   background-color: var(--color-ink);
@@ -15,9 +15,10 @@
 body {
   margin: 0;
   background:
-    radial-gradient(circle at top right, rgba(125, 86, 244, 0.28), transparent 40%),
-    radial-gradient(circle at 25% 20%, rgba(58, 228, 255, 0.25), transparent 45%),
-    radial-gradient(circle at 80% 80%, rgba(255, 208, 91, 0.25), transparent 35%),
+    radial-gradient(circle at top right, rgba(90, 46, 138, 0.35), transparent 45%),
+    radial-gradient(circle at 20% 15%, rgba(44, 199, 199, 0.25), transparent 40%),
+    radial-gradient(circle at 80% 85%, rgba(244, 193, 75, 0.18), transparent 40%),
+    radial-gradient(circle at 15% 75%, rgba(214, 74, 122, 0.2), transparent 38%),
     var(--color-ink);
   min-height: 100vh;
 }
@@ -36,8 +37,23 @@ body {
   background-size: 60px 60px;
 }
 
+.cast-player {
+  width: 100%;
+  min-height: clamp(420px, 45vw, 620px);
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+.cast-player .asciinema-player,
+.cast-player .ap-player,
+.cast-player .ap-terminal {
+  width: 100%;
+  height: 100%;
+}
+
 .pulse-ring {
-  box-shadow: 0 0 30px rgba(58, 228, 255, 0.35), 0 0 50px rgba(125, 86, 244, 0.35);
+  box-shadow: 0 0 30px rgba(44, 199, 199, 0.35), 0 0 50px rgba(90, 46, 138, 0.4);
 }
 
 .pill {
@@ -46,4 +62,96 @@ body {
   font-size: 0.75rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, rgba(244, 193, 75, 0.95), rgba(255, 214, 102, 0.9));
+  color: #1b1202;
+  box-shadow: 0 12px 30px rgba(244, 193, 75, 0.25);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, rgba(255, 214, 102, 1), rgba(244, 193, 75, 0.95));
+}
+
+.btn-secondary {
+  border: 1px solid rgba(244, 193, 75, 0.5);
+  color: #f7e7c1;
+}
+
+.btn-secondary:hover {
+  border-color: rgba(244, 193, 75, 0.9);
+  color: #fff3d1;
+}
+
+.pill {
+  background: rgba(90, 46, 138, 0.35);
+  border: 1px solid rgba(244, 193, 75, 0.25);
+}
+
+.chapter-button {
+  transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease;
+}
+
+.chapter-button:hover {
+  border-color: rgba(44, 199, 199, 0.65);
+  background-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+/* Accessibility: Skip link */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-gold);
+  color: var(--color-ink);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0 0 0.5rem 0.5rem;
+  font-weight: 600;
+  z-index: 9999;
+  transition: top 200ms ease;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 2px solid var(--color-arcane);
+  outline-offset: 2px;
+}
+
+/* Accessibility: Focus styles */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid var(--color-arcane);
+  outline-offset: 2px;
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--color-gold);
+}
+
+.btn-secondary:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.chapter-button:focus-visible {
+  border-color: var(--color-arcane);
+  outline: 2px solid var(--color-arcane);
+  outline-offset: 2px;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
