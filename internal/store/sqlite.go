@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite" // Pure-Go SQLite driver (no CGO required)
 )
 
 type SQLiteStore struct {
@@ -35,7 +35,7 @@ func NewSQLiteStore(dbPath, artifactDir string) (*SQLiteStore, error) {
 	// - _foreign_keys=ON: Enforce foreign key constraints
 	dsn := fmt.Sprintf("%s?_journal_mode=WAL&_busy_timeout=5000&_synchronous=NORMAL&_cache_size=-64000&_foreign_keys=ON", dbPath)
 
-	db, err := sql.Open("sqlite3", dsn)
+	db, err := sql.Open("sqlite", dsn)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open database: %w", err)
 	}

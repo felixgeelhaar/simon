@@ -8,7 +8,6 @@ set -e
 # 1. Setup Clean Environment
 TEMP_HOME=$(mktemp -d)
 export HOME=$TEMP_HOME
-SIMON_BIN="./simon"
 
 # 1.1 Provider config
 RECORD_PROVIDER=${RECORD_PROVIDER:-openai}
@@ -16,6 +15,14 @@ RECORD_MODEL=${RECORD_MODEL:-gpt-4o}
 RECORD_COLS=${RECORD_COLS:-120}
 RECORD_ROWS=${RECORD_ROWS:-34}
 RECORD_OUTPUT=${RECORD_OUTPUT:-website/public/simon_demo.cast}
+
+# Use production binary from PATH (homebrew installed)
+SIMON_BIN=$(which simon)
+if [[ -z "$SIMON_BIN" ]]; then
+  echo "Error: simon not found in PATH. Install via: brew install felixgeelhaar/tap/simon"
+  exit 1
+fi
+echo "Using production binary: $SIMON_BIN"
 
 # Validate API keys for providers that need them
 case "$RECORD_PROVIDER" in
@@ -46,10 +53,6 @@ case "$RECORD_PROVIDER" in
     exit 1
     ;;
 esac
-
-# Build Simon
-echo "Building Simon..."
-go build -o simon cmd/simon/main.go
 
 # 2. Prepare Demo Spec
 cat <<EOF > demo_task.yaml
