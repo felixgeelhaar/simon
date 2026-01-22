@@ -6,11 +6,11 @@ import (
 	"github.com/felixgeelhaar/simon/internal/coach"
 	"github.com/felixgeelhaar/simon/internal/guard"
 	"github.com/felixgeelhaar/simon/internal/provider"
-	"github.com/hashicorp/go-plugin"
+	hcplugin "github.com/hashicorp/go-plugin"
 )
 
 // HandshakeConfig is used to handshake between host and plugin.
-var HandshakeConfig = plugin.HandshakeConfig{
+var HandshakeConfig = hcplugin.HandshakeConfig{
 	ProtocolVersion:  1,
 	MagicCookieKey:   "SIMON_PLUGIN_MAGIC_COOKIE",
 	MagicCookieValue: "simon-runtime",

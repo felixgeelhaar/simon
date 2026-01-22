@@ -2,11 +2,14 @@ package provider
 
 import (
 	"context"
+	"sync"
 	"time"
 )
 
 // StubProvider is a simple provider for testing.
+// It is thread-safe and can be used in concurrent tests.
 type StubProvider struct {
+	mu        sync.Mutex
 	Responses []Response
 }
 
@@ -14,30 +17,30 @@ func NewStubProvider() *StubProvider {
 	return &StubProvider{
 		Responses: []Response{
 			{
-				Content: "Analyzing goal and initializing governance guard...",
-				Usage:   Usage{PromptTokens: 100, CompletionTokens: 20, TotalTokens: 120},
+				Content: "I'll create a Go CLI application. First, let me check the current directory structure.",
+				Usage:   Usage{PromptTokens: 100, CompletionTokens: 25, TotalTokens: 125},
 			},
 			{
-				Content: "Searching memory for relevant past experiences...",
-				Usage:   Usage{PromptTokens: 150, CompletionTokens: 25, TotalTokens: 175},
-			},
-			{
-				Content: "Checking environment health...",
+				Content: "Checking for existing Go modules and project files...",
 				ToolCalls: []ToolCall{
 					{ID: "call_1", Name: "run_shell", Args: `{"cmd": "ls -la"}`},
 				},
-				Usage: Usage{PromptTokens: 200, CompletionTokens: 30, TotalTokens: 230},
+				Usage: Usage{PromptTokens: 150, CompletionTokens: 30, TotalTokens: 180},
 			},
 			{
-				Content: "Executing primary implementation...",
+				Content: "The evidence file exists. Now verifying the task specification matches our goal...",
 				ToolCalls: []ToolCall{
-					{ID: "call_2", Name: "run_shell", Args: `{"cmd": "echo 'wizardly output' > demo_task.yaml"}`},
+					{ID: "call_2", Name: "run_shell", Args: `{"cmd": "cat demo_task.yaml"}`},
 				},
-				Usage: Usage{PromptTokens: 250, CompletionTokens: 40, TotalTokens: 290},
+				Usage: Usage{PromptTokens: 200, CompletionTokens: 35, TotalTokens: 235},
 			},
 			{
-				Content: "Verifying evidence and finalizing session...",
-				Usage:   Usage{PromptTokens: 300, CompletionTokens: 20, TotalTokens: 320},
+				Content: "Goal confirmed: Create hello world Go CLI. Evidence path verified. Preparing completion.",
+				Usage:   Usage{PromptTokens: 250, CompletionTokens: 30, TotalTokens: 280},
+			},
+			{
+				Content: "All evidence files confirmed. Session objectives achieved within budget constraints.",
+				Usage:   Usage{PromptTokens: 300, CompletionTokens: 25, TotalTokens: 325},
 			},
 			{
 				Content: "Task complete.",
@@ -54,6 +57,9 @@ func (m *StubProvider) Chat(ctx context.Context, messages []Message) (*Response,
 		return nil, ctx.Err()
 	case <-time.After(1500 * time.Millisecond):
 	}
+
+	m.mu.Lock()
+	defer m.mu.Unlock()
 
 	if len(m.Responses) == 0 {
 		return &Response{Content: "Task complete.", Usage: Usage{}}, nil

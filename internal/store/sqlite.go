@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -14,6 +15,7 @@ import (
 type SQLiteStore struct {
 	db          *sql.DB
 	artifactDir string
+	memoryIndex *vectorIndex // In-memory index for fast vector search
 }
 
 func NewSQLiteStore(dbPath, artifactDir string) (*SQLiteStore, error) {
@@ -25,9 +27,30 @@ func NewSQLiteStore(dbPath, artifactDir string) (*SQLiteStore, error) {
 		return nil, fmt.Errorf("failed to create artifact directory: %w", err)
 	}
 
-	db, err := sql.Open("sqlite3", dbPath)
+	// Configure SQLite with connection string options for better performance and safety
+	// - _journal_mode=WAL: Write-Ahead Logging for better concurrency
+	// - _busy_timeout=5000: Wait up to 5 seconds when database is locked
+	// - _synchronous=NORMAL: Good balance between safety and performance
+	// - _cache_size=-64000: Use 64MB of cache
+	// - _foreign_keys=ON: Enforce foreign key constraints
+	dsn := fmt.Sprintf("%s?_journal_mode=WAL&_busy_timeout=5000&_synchronous=NORMAL&_cache_size=-64000&_foreign_keys=ON", dbPath)
+
+	db, err := sql.Open("sqlite3", dsn)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open database: %w", err)
+	}
+
+	// Configure connection pool settings
+	// SQLite works best with a single writer, but can handle multiple readers
+	db.SetMaxOpenConns(1)                  // Single connection for writes (SQLite limitation)
+	db.SetMaxIdleConns(1)                  // Keep connection alive
+	db.SetConnMaxLifetime(time.Hour)       // Recycle connections hourly
+	db.SetConnMaxIdleTime(30 * time.Minute) // Close idle connections after 30 minutes
+
+	// Verify connection is working
+	if err := db.Ping(); err != nil {
+		db.Close()
+		return nil, fmt.Errorf("failed to ping database: %w", err)
 	}
 
 	store := &SQLiteStore{
@@ -152,9 +175,49 @@ func (s *SQLiteStore) UpdateSession(session *Session) error {
 
 // Artifact Implementation
 
+// sanitizeArtifactPath validates and sanitizes an artifact path to prevent path traversal attacks.
+// It ensures the resulting path is within the artifact directory.
+func (s *SQLiteStore) sanitizeArtifactPath(path string) (string, error) {
+	// Clean the path to resolve any .. or . components
+	cleanPath := filepath.Clean(path)
+
+	// Reject paths that start with / (absolute paths)
+	if filepath.IsAbs(cleanPath) {
+		return "", fmt.Errorf("absolute paths not allowed: %s", path)
+	}
+
+	// Reject paths that try to escape the artifact directory
+	if strings.HasPrefix(cleanPath, "..") || strings.Contains(cleanPath, "/../") {
+		return "", fmt.Errorf("path traversal not allowed: %s", path)
+	}
+
+	// Construct the full path and verify it's within the artifact directory
+	fullPath := filepath.Join(s.artifactDir, cleanPath)
+	absArtifactDir, err := filepath.Abs(s.artifactDir)
+	if err != nil {
+		return "", fmt.Errorf("failed to resolve artifact directory: %w", err)
+	}
+	absFullPath, err := filepath.Abs(fullPath)
+	if err != nil {
+		return "", fmt.Errorf("failed to resolve artifact path: %w", err)
+	}
+
+	// Ensure the resolved path is within the artifact directory
+	if !strings.HasPrefix(absFullPath, absArtifactDir+string(filepath.Separator)) && absFullPath != absArtifactDir {
+		return "", fmt.Errorf("path escapes artifact directory: %s", path)
+	}
+
+	return fullPath, nil
+}
+
 func (s *SQLiteStore) SaveArtifact(artifact *Artifact, content []byte) error {
-	// 1. Save content to filesystem
-	fullPath := filepath.Join(s.artifactDir, artifact.Path)
+	// 1. Sanitize and validate the artifact path
+	fullPath, err := s.sanitizeArtifactPath(artifact.Path)
+	if err != nil {
+		return fmt.Errorf("invalid artifact path: %w", err)
+	}
+
+	// 2. Save content to filesystem
 	if err := os.MkdirAll(filepath.Dir(fullPath), 0750); err != nil {
 		return fmt.Errorf("failed to create artifact dir: %w", err)
 	}
@@ -162,9 +225,9 @@ func (s *SQLiteStore) SaveArtifact(artifact *Artifact, content []byte) error {
 		return fmt.Errorf("failed to write artifact content: %w", err)
 	}
 
-	// 2. Save metadata to DB
+	// 3. Save metadata to DB
 	query := `INSERT INTO artifacts (id, session_id, path, type, created_at, digest) VALUES (?, ?, ?, ?, ?, ?)`
-	_, err := s.db.Exec(query, artifact.ID, artifact.SessionID, artifact.Path, artifact.Type, artifact.CreatedAt, artifact.Digest)
+	_, err = s.db.Exec(query, artifact.ID, artifact.SessionID, artifact.Path, artifact.Type, artifact.CreatedAt, artifact.Digest)
 	return err
 }
 
@@ -181,9 +244,14 @@ func (s *SQLiteStore) GetArtifact(id string) (*Artifact, []byte, error) {
 		return nil, nil, err
 	}
 
-	// 2. Get content
-	fullPath := filepath.Join(s.artifactDir, artifact.Path)
-	content, err := os.ReadFile(fullPath) // #nosec G304
+	// 2. Sanitize and validate the artifact path from database
+	fullPath, err := s.sanitizeArtifactPath(artifact.Path)
+	if err != nil {
+		return nil, nil, fmt.Errorf("invalid artifact path in database: %w", err)
+	}
+
+	// 3. Get content
+	content, err := os.ReadFile(fullPath)
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to read artifact content: %w", err)
 	}

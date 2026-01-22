@@ -17,7 +17,10 @@ import (
 )
 
 // Runtime orchestrates the execution loop.
+// It coordinates between the various components: Guard for policy enforcement,
+// Coach for task validation, Provider for AI communication, and MCP Proxy for tool execution.
 type Runtime struct {
+	// Core dependencies
 	store    store.Storage
 	guard    *guard.Guard
 	coach    *coach.Coach
@@ -25,24 +28,66 @@ type Runtime struct {
 	provider provider.Provider
 	mcpProxy *mcp.Proxy
 	ui       ui.UI
+
+	// Separated concerns
+	stateManager *StateManager
+	eventBus     *EventBus
+	toolRegistry *ToolRegistry
 }
 
+// New creates a new Runtime with the given dependencies.
 func New(s store.Storage, g *guard.Guard, c *coach.Coach, o *observe.Observer, p provider.Provider, mp *mcp.Proxy) *Runtime {
-	return &Runtime{
-		store:    s,
-		guard:    g,
-		coach:    c,
-		observe:  o,
-		provider: p,
-		mcpProxy: mp,
-		ui:       ui.SilentUI{},
+	r := &Runtime{
+		store:        s,
+		guard:        g,
+		coach:        c,
+		observe:      o,
+		provider:     p,
+		mcpProxy:     mp,
+		ui:           ui.SilentUI{},
+		stateManager: NewStateManager(s),
+		eventBus:     NewEventBus(),
+		toolRegistry: NewToolRegistry(),
 	}
+
+	// Set up event handlers for logging
+	r.setupEventHandlers()
+
+	return r
 }
 
+// setupEventHandlers configures default event handlers for logging and observability.
+func (r *Runtime) setupEventHandlers() {
+	// Log all events for observability
+	r.eventBus.SubscribeAll(func(e Event) {
+		r.observe.Log().Debug().
+			Str("event", string(e.Type)).
+			Str("session", e.SessionID).
+			Interface("data", e.Data).
+			Msg("runtime event")
+	})
+}
+
+// SetUI sets the UI component for the runtime.
 func (r *Runtime) SetUI(u ui.UI) {
 	if u != nil {
 		r.ui = u
 	}
+}
+
+// StateManager returns the runtime's state manager.
+func (r *Runtime) StateManager() *StateManager {
+	return r.stateManager
+}
+
+// EventBus returns the runtime's event bus.
+func (r *Runtime) EventBus() *EventBus {
+	return r.eventBus
+}
+
+// ToolRegistry returns the runtime's tool registry.
+func (r *Runtime) ToolRegistry() *ToolRegistry {
+	return r.toolRegistry
 }
 
 // ExecuteSession runs the main loop for a session.

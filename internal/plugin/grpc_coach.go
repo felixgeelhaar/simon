@@ -5,27 +5,27 @@ import (
 
 	"github.com/felixgeelhaar/simon/internal/coach"
 	"github.com/felixgeelhaar/simon/internal/plugin/proto"
-	"github.com/hashicorp/go-plugin"
+	hcplugin "github.com/hashicorp/go-plugin"
 	"google.golang.org/grpc"
 )
 
 // PluginMap is the map of plugins we can dispense.
-var PluginMap = map[string]plugin.Plugin{
+var PluginMap = map[string]hcplugin.Plugin{
 	"coach": &CoachGRPCPlugin{},
 }
 
-// CoachGRPCPlugin is the implementation of plugin.GRPCPlugin so we can serve/consume this.
+// CoachGRPCPlugin is the implementation of hcplugin.GRPCPlugin so we can serve/consume this.
 type CoachGRPCPlugin struct {
-	plugin.Plugin
+	hcplugin.Plugin
 	Impl CoachPlugin
 }
 
-func (p *CoachGRPCPlugin) GRPCServer(broker *plugin.GRPCBroker, s *grpc.Server) error {
+func (p *CoachGRPCPlugin) GRPCServer(broker *hcplugin.GRPCBroker, s *grpc.Server) error {
 	proto.RegisterCoachServer(s, &CoachGRPCServer{Impl: p.Impl})
 	return nil
 }
 
-func (p *CoachGRPCPlugin) GRPCClient(ctx context.Context, broker *plugin.GRPCBroker, c *grpc.ClientConn) (interface{}, error) {
+func (p *CoachGRPCPlugin) GRPCClient(ctx context.Context, broker *hcplugin.GRPCBroker, c *grpc.ClientConn) (interface{}, error) {
 	return &CoachGRPCClient{client: proto.NewCoachClient(c)}, nil
 }
 
