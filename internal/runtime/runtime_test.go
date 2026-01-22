@@ -23,7 +23,7 @@ func TestRuntime_ExecuteSession(t *testing.T) {
 	s, _ := store.NewSQLiteStore(filepath.Join(tmpDir, "db"), filepath.Join(tmpDir, "artifacts"))
 	g := guard.New(guard.DefaultPolicy)
 	c := coach.New()
-	o := observe.New(os.Stdout)
+	o := observe.New(os.Stdout, true)
 	
 t.Run("Successful Run", func(t *testing.T) {
 		specPath := filepath.Join(tmpDir, "spec_success.yaml")

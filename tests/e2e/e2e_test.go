@@ -46,7 +46,7 @@ func TestE2E_RunSession(t *testing.T) {
 	stubProvider := provider.NewStubProvider()
 
 	var logBuf bytes.Buffer
-	obs := observe.New(&logBuf)
+	obs := observe.New(&logBuf, true)
 	defer obs.Close()
 
 	g := guard.New(guard.DefaultPolicy)

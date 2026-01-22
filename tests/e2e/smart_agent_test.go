@@ -150,7 +150,7 @@ func TestE2E_SmartAgent_BuildProject(t *testing.T) {
 	policy.AllowedCommands = append(policy.AllowedCommands, "mkdir", "echo")
 	g := guard.New(policy)
 	c := coach.New()
-	o := observe.New(os.Stdout)
+	o := observe.New(os.Stdout, true)
 	p := &SmartStub{}
 	mp := mcp.NewProxy(s, g)
 	r := runtime.New(s, g, c, o, p, mp)

@@ -9,7 +9,7 @@ import (
 
 func TestNew(t *testing.T) {
 	buf := &bytes.Buffer{}
-	obs := New(buf)
+	obs := New(buf, true)
 
 	if obs == nil {
 		t.Fatal("expected non-nil Observer")
@@ -21,7 +21,7 @@ func TestNew(t *testing.T) {
 
 func TestNewJSON(t *testing.T) {
 	buf := &bytes.Buffer{}
-	obs := NewJSON(buf)
+	obs := NewJSON(buf, true)
 
 	if obs == nil {
 		t.Fatal("expected non-nil Observer")
@@ -33,7 +33,7 @@ func TestNewJSON(t *testing.T) {
 
 func TestObserver_Log(t *testing.T) {
 	buf := &bytes.Buffer{}
-	obs := New(buf)
+	obs := New(buf, true)
 
 	logger := obs.Log()
 	if logger == nil {
@@ -51,7 +51,7 @@ func TestObserver_Log(t *testing.T) {
 
 func TestObserver_StartSpan(t *testing.T) {
 	buf := &bytes.Buffer{}
-	obs := New(buf)
+	obs := New(buf, true)
 
 	ctx := context.Background()
 	spanCtx, span := obs.StartSpan(ctx, "test-span")
@@ -69,7 +69,7 @@ func TestObserver_StartSpan(t *testing.T) {
 
 func TestObserver_Close(t *testing.T) {
 	buf := &bytes.Buffer{}
-	obs := New(buf)
+	obs := New(buf, true)
 
 	err := obs.Close()
 	if err != nil {
@@ -91,7 +91,7 @@ func TestObserver_LogLevels(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			buf := &bytes.Buffer{}
-			obs := New(buf)
+			obs := New(buf, true)
 			logger := obs.Log()
 
 			switch tc.level {
@@ -116,7 +116,7 @@ func TestObserver_LogLevels(t *testing.T) {
 
 func TestObserver_LogWithFields(t *testing.T) {
 	buf := &bytes.Buffer{}
-	obs := New(buf)
+	obs := New(buf, true)
 
 	obs.Log().Info().
 		Str("session", "sess-123").

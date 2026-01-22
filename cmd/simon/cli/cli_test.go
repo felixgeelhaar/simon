@@ -17,7 +17,7 @@ func TestRunner(t *testing.T) {
 
 	s, _ := store.NewSQLiteStore(filepath.Join(tmpDir, "db"), filepath.Join(tmpDir, "artifacts"))
 	p := provider.NewStubProvider()
-	o := observe.New(os.Stdout)
+	o := observe.New(os.Stdout, true)
 
 	specPath := filepath.Join(tmpDir, "spec.yaml")
 	os.WriteFile(specPath, []byte("goal: test\ndefinition_of_done: test\nevidence: [test.txt]"), 0600)

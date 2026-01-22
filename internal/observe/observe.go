@@ -16,19 +16,30 @@ type Observer struct {
 	log *bolt.Logger
 }
 
-func New(out io.Writer) *Observer {
-	// Initialize bolt logger with a console handler for demo
+// New creates a new Observer with console output.
+// If verbose is false, only warnings and errors are shown.
+func New(out io.Writer, verbose bool) *Observer {
 	handler := bolt.NewConsoleHandler(out)
 	l := bolt.New(handler)
+
+	if !verbose {
+		l.SetLevel(bolt.WARN)
+	}
 
 	return &Observer{
 		log: l,
 	}
 }
 
-func NewJSON(out io.Writer) *Observer {
+// NewJSON creates a new Observer with JSON output.
+// If verbose is false, only warnings and errors are shown.
+func NewJSON(out io.Writer, verbose bool) *Observer {
 	handler := bolt.NewJSONHandler(out)
 	l := bolt.New(handler)
+
+	if !verbose {
+		l.SetLevel(bolt.WARN)
+	}
 
 	return &Observer{
 		log: l,

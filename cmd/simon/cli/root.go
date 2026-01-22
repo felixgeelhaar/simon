@@ -77,9 +77,9 @@ func runSession() {
 	// Initialize Observer
 	var obs *observe.Observer
 	if ciMode {
-		obs = observe.NewJSON(os.Stdout)
+		obs = observe.NewJSON(os.Stdout, verbose)
 	} else {
-		obs = observe.New(os.Stdout)
+		obs = observe.New(os.Stdout, verbose)
 	}
 	defer obs.Close()
 
