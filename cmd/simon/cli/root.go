@@ -118,8 +118,6 @@ func runSession() {
 		case "anthropic":
 			apiKey, _ := storeLayer.GetConfig("anthropic.api_key")
 			p, pErr = provider.NewAnthropicProvider(apiKey, modelName)
-		case "stub":
-			p = provider.NewStubProvider()
 		default:
 			obs.Log().Fatal().Str("provider", providerType).Msg("Unknown provider")
 		}

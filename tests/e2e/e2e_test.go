@@ -1,97 +1,88 @@
 package e2e
 
 import (
+	"bytes"
+	"context"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
+
+	"github.com/felixgeelhaar/simon/internal/coach"
+	"github.com/felixgeelhaar/simon/internal/guard"
+	"github.com/felixgeelhaar/simon/internal/mcp"
+	"github.com/felixgeelhaar/simon/internal/observe"
+	"github.com/felixgeelhaar/simon/internal/provider"
+	"github.com/felixgeelhaar/simon/internal/runtime"
+	"github.com/felixgeelhaar/simon/internal/store"
 )
 
 func TestE2E_RunSession(t *testing.T) {
-	// 1. Build Binary
-	rootDir, _ := filepath.Abs("../../")
-	binPath := filepath.Join(rootDir, "simon_e2e")
-	
-	buildCmd := exec.Command("go", "build", "-o", binPath, "github.com/felixgeelhaar/simon/cmd/simon")
-	buildCmd.Dir = rootDir
-	if out, err := buildCmd.CombinedOutput(); err != nil {
-		t.Fatalf("Failed to build simon: %v\n%s", err, out)
-	}
-	defer os.Remove(binPath)
-
-	// 2. Setup Env
+	// 1. Setup temp directory
 	tmpDir, _ := os.MkdirTemp("", "simon-e2e-*")
 	defer os.RemoveAll(tmpDir)
 
-	// We need to override the HOME dir so simon uses a fresh DB/Config in tmpDir
-	// simon uses os.UserHomeDir() -> .simon
-	// We can set HOME env var for the command
-	
-specPath := filepath.Join(tmpDir, "task.yaml")
-evidencePath := filepath.Join(tmpDir, "evidence.txt")
-	
-	// Create Spec
-specContent := "goal: E2E Test\ndefinition_of_done: Done\nevidence: [" + evidencePath + "]"
-os.WriteFile(specPath, []byte(specContent), 0600)
+	// Create spec and evidence files
+	specPath := filepath.Join(tmpDir, "task.yaml")
+	evidencePath := filepath.Join(tmpDir, "evidence.txt")
 
-	// 3. Run Simon (Fail Verification first)
-	// The StubProvider returns "Task complete." immediately.
-	// Runtime will check evidencePath, which doesn't exist yet.
-	// It will loop.
-	// We need the StubProvider to be smart enough or we need to simulate the user creating the file?
-	// The current StubProvider in internal/provider/stub.go has 3 responses:
-	// 1. "I will start..."
-	// 2. "Checking system..." (tool call echo)
-	// 3. "Task complete."
-	
-	// If we run this, it will:
-	// Iter 1: "I will start"
-	// Iter 2: Tool call "echo hello" -> MCP executes -> Output saved -> History updated
-	// Iter 3: "Task complete." -> Verify evidence -> Fail (File missing) -> Loop continues
-	// Iter 4: Stub provider runs out of responses -> returns "Task complete." again? 
-	// Wait, my StubProvider implementation:
-	/*
-	if len(m.Responses) == 0 {
-		return &Response{Content: "Task complete.", Usage: Usage{}}, nil
+	specContent := "goal: E2E Test\ndefinition_of_done: Done\nevidence: [" + evidencePath + "]"
+	os.WriteFile(specPath, []byte(specContent), 0600)
+	os.WriteFile(evidencePath, []byte("proof"), 0600)
+
+	// 2. Initialize components
+	simonDir := filepath.Join(tmpDir, ".simon")
+	storeLayer, err := store.NewSQLiteStore(
+		filepath.Join(simonDir, "metadata.db"),
+		filepath.Join(simonDir, "artifacts"),
+	)
+	if err != nil {
+		t.Fatalf("Failed to init store: %v", err)
 	}
-	*/
-	// So it keeps saying Task complete.
-	// The verification keeps failing.
-	// The Guard eventually stops it (MaxIterations).
-	
-	// For a SUCCESSFUL E2E test, we need the file to exist.
-	// Or we need the agent to create it using `run_shell`.
-	// The StubProvider has a hardcoded tool call: `{"cmd": "echo hello"}`.
-	// It does NOT create the evidence file.
-	
-	// So with the current StubProvider, an E2E run will effectively fail verification until timeout.
-	// That's actually a valid test of the system (it works, it just fails the task).
-	
-	// Let's create the evidence file beforehand so verification passes on Iter 3.
-os.WriteFile(evidencePath, []byte("proof"), 0600)
+	defer storeLayer.Close()
 
-	runCmd := exec.Command(binPath, "run", specPath, "--provider=stub")
-	runCmd.Env = append(os.Environ(), "HOME="+tmpDir)
-	output, err := runCmd.CombinedOutput()
-	
-outStr := string(output)
+	// Use stub provider for testing (internal use only, not exposed via CLI)
+	stubProvider := provider.NewStubProvider()
+
+	var logBuf bytes.Buffer
+	obs := observe.New(&logBuf)
+	defer obs.Close()
+
+	g := guard.New(guard.DefaultPolicy)
+	c := coach.New()
+	mp := mcp.NewProxy(storeLayer, g)
+	rt := runtime.New(storeLayer, g, c, obs, stubProvider, mp)
+
+	// 3. Create and run session
+	sessID := "session-e2e-test"
+	session := &store.Session{
+		ID:        sessID,
+		CreatedAt: time.Now(),
+		Status:    "initialized",
+		Metadata:  map[string]string{"env": "test", "spec": specPath},
+	}
+
+	if err := storeLayer.CreateSession(session); err != nil {
+		t.Fatalf("Failed to create session: %v", err)
+	}
+
+	ctx := context.Background()
+	err = rt.ExecuteSession(ctx, sessID)
+
+	outStr := logBuf.String()
 	t.Logf("Output:\n%s", outStr)
 
 	if err != nil {
-		t.Fatalf("Simon failed: %v", err)
+		t.Fatalf("Session failed: %v", err)
 	}
 
 	// 4. Validate Output
-	if !strings.Contains(outStr, "Session execution cycle complete") {
-		t.Error("Expected successful completion message")
-	}
 	if !strings.Contains(outStr, "verification successful") {
 		t.Error("Expected verification success")
 	}
 
 	// 5. Validate Persistence
-simonDir := filepath.Join(tmpDir, ".simon")
 	if _, err := os.Stat(filepath.Join(simonDir, "metadata.db")); os.IsNotExist(err) {
 		t.Error("metadata.db not created")
 	}

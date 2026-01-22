@@ -11,19 +11,44 @@ export HOME=$TEMP_HOME
 SIMON_BIN="./simon"
 
 # 1.1 Provider config
-RECORD_PROVIDER=${RECORD_PROVIDER:-stub}
+RECORD_PROVIDER=${RECORD_PROVIDER:-openai}
 RECORD_MODEL=${RECORD_MODEL:-gpt-4o}
 RECORD_COLS=${RECORD_COLS:-120}
 RECORD_ROWS=${RECORD_ROWS:-34}
 RECORD_OUTPUT=${RECORD_OUTPUT:-website/public/simon_demo.cast}
 
-if [[ "$RECORD_PROVIDER" == "openai" && -z "${OPENAI_API_KEY}" ]]; then
-  echo "OPENAI_API_KEY must be set for provider=openai"
-  exit 1
-fi
+# Validate API keys for providers that need them
+case "$RECORD_PROVIDER" in
+  openai)
+    if [[ -z "${OPENAI_API_KEY}" ]]; then
+      echo "OPENAI_API_KEY must be set for provider=openai"
+      exit 1
+    fi
+    ;;
+  anthropic)
+    if [[ -z "${ANTHROPIC_API_KEY}" ]]; then
+      echo "ANTHROPIC_API_KEY must be set for provider=anthropic"
+      exit 1
+    fi
+    ;;
+  gemini)
+    if [[ -z "${GEMINI_API_KEY}" ]]; then
+      echo "GEMINI_API_KEY must be set for provider=gemini"
+      exit 1
+    fi
+    ;;
+  ollama)
+    # Ollama runs locally, no API key needed
+    ;;
+  *)
+    echo "Unknown provider: $RECORD_PROVIDER"
+    echo "Supported providers: openai, anthropic, gemini, ollama"
+    exit 1
+    ;;
+esac
 
-# Build Simon with the new cinematic stub
-echo "Building Simon with cinematic stub..."
+# Build Simon
+echo "Building Simon..."
 go build -o simon cmd/simon/main.go
 
 # 2. Prepare Demo Spec
