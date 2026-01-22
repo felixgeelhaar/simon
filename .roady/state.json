@@ -43,7 +43,7 @@
       ]
     },
     "task-core-architectural-decisions": {
-      "status": "done",
+      "status": "verified",
       "path": "",
       "owner": "felixgeelhaar"
     },
@@ -60,7 +60,7 @@
       ]
     },
     "task-design-goals": {
-      "status": "done",
+      "status": "verified",
       "path": "",
       "owner": "felixgeelhaar"
     },
@@ -75,7 +75,7 @@
       ]
     },
     "task-high-level-architecture": {
-      "status": "done",
+      "status": "verified",
       "path": "",
       "owner": "felixgeelhaar"
     },
@@ -137,7 +137,7 @@
       ]
     },
     "task-observability": {
-      "status": "done",
+      "status": "verified",
       "path": "",
       "owner": "felixgeelhaar"
     },
@@ -168,7 +168,7 @@
       ]
     },
     "task-storage-model": {
-      "status": "done",
+      "status": "verified",
       "path": "",
       "owner": "felixgeelhaar"
     },
@@ -228,5 +228,5 @@
       ]
     }
   },
-  "updated_at": "2026-01-19T19:23:10.631455+01:00"
+  "updated_at": "2026-01-22T22:21:56.193572+01:00"
 }
