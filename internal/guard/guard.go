@@ -77,6 +77,11 @@ func New(p Policy) *Guard {
 	return &Guard{policy: p}
 }
 
+// Policy returns the guard's current policy configuration.
+func (g *Guard) Policy() Policy {
+	return g.policy
+}
+
 // CheckBudget verifies if the usage is within limits.
 func (g *Guard) CheckBudget(iterations, promptTokens, outputTokens int) *Violation {
 	if iterations > g.policy.MaxIterations {

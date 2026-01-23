@@ -116,12 +116,22 @@ func (r *Runtime) ExecuteSession(ctx context.Context, sessionID string) error {
 		Str("goal", spec.Goal).
 		Msg("starting session execution")
 
+	// Display mission briefing
+	r.ui.UpdateStatus("Executing Session...")
+	r.ui.Log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+	r.ui.Log("▶ Mission Briefing")
+	r.ui.Log(fmt.Sprintf("  Goal: %s", truncateString(spec.Goal, 60)))
+	r.ui.Log(fmt.Sprintf("  Provider: %s", r.provider.Name()))
+	r.ui.Log(fmt.Sprintf("  Evidence required: %d files", len(spec.Evidence)))
+	r.ui.Log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+
 	// State tracking for this run
 	currentIteration := 0
 	totalPromptTokens := 0
 	totalOutputTokens := 0
 	
 	// 0. Retrieve Context (Advanced Context Management)
+	r.ui.Log("🧠 Searching memory for relevant experiences...")
 	var contextContext string
 	if vec, err := r.provider.Embed(ctx, spec.Goal); err == nil {
 		memories, err := r.store.SearchMemory(vec, 3)
@@ -133,10 +143,14 @@ func (r *Runtime) ExecuteSession(ctx context.Context, sessionID string) error {
 			}
 			contextContext = sb.String()
 			r.observe.Log().Info().Int("count", len(memories)).Msg("retrieved relevant memories")
+			r.ui.Log(fmt.Sprintf("   └─ Found %d relevant memories", len(memories)))
+		} else {
+			r.ui.Log("   └─ No prior experiences found")
 		}
 	} else {
 		// Log warning but continue if embedding fails (e.g. CLI provider)
 		r.observe.Log().Warn().Err(err).Msg("failed to embed goal for context retrieval")
+		r.ui.Log("   └─ Memory search skipped")
 	}
 
 	history := []provider.Message{
@@ -159,23 +173,24 @@ func (r *Runtime) ExecuteSession(ctx context.Context, sessionID string) error {
 		// 1.5 Context Management (Summarization)
 		if len(history) > 20 || totalPromptTokens > 3000 {
 			iterLog.Info().Msg("context limit approaching, summarizing history")
+			r.ui.Log("📝 Context limit approaching, summarizing progress...")
 			summary, err := r.summarizeHistory(ctx, history)
 			if err != nil {
 				iterLog.Error().Err(err).Msg("failed to summarize, continuing without pruning")
 			} else {
 				newHistory := []provider.Message{
 					{
-						Role: "user", 
-						Content: fmt.Sprintf("Goal: %s\nDoD: %s\nConstraints: %v\n\nProgress Summary: %s\n\nPlease continue execution.", 
-							spec.Goal, spec.DefinitionOfDone, spec.Constraints, summary),
+						Role:    "user",
+						Content: fmt.Sprintf("Goal: %s\nDoD: %s\nConstraints: %v\n\nProgress Summary: %s\n\nPlease continue execution.", spec.Goal, spec.DefinitionOfDone, spec.Constraints, summary),
 					},
 				}
 				history = newHistory
+				r.ui.Log("   └─ Context compressed, continuing...")
 			}
 		}
 
 		// 2. Execute
-		r.ui.Log(fmt.Sprintf("Iteration %d: Calling Provider...", currentIteration))
+		r.ui.Log(fmt.Sprintf("⏳ [%d/%d] Thinking...", currentIteration, r.guard.Policy().MaxIterations))
 		resp, err := r.provider.Chat(ctx, history)
 		if err != nil {
 			iterLog.Error().Err(err).Msg("provider call failed")
@@ -185,7 +200,14 @@ func (r *Runtime) ExecuteSession(ctx context.Context, sessionID string) error {
 		// 3. Update Usage
 		totalPromptTokens += resp.Usage.PromptTokens
 		totalOutputTokens += resp.Usage.CompletionTokens
-		r.ui.Log(fmt.Sprintf("Provider responded (%d tokens)", resp.Usage.TotalTokens))
+
+		// Show a preview of what the agent is thinking/doing
+		if resp.Content != "" {
+			preview := extractFirstSentence(resp.Content, 70)
+			r.ui.Log(fmt.Sprintf("💭 Agent: %s", preview))
+		}
+		r.ui.Log(fmt.Sprintf("   └─ Used %d tokens (budget: %d/%d)",
+			resp.Usage.TotalTokens, totalPromptTokens+totalOutputTokens, r.guard.Policy().MaxPromptTokens))
 		
 		history = append(history, provider.Message{
 			Role:      "assistant",
@@ -195,14 +217,23 @@ func (r *Runtime) ExecuteSession(ctx context.Context, sessionID string) error {
 
 		// 4. Process Tools
 		if len(resp.ToolCalls) > 0 {
-			r.ui.Log(fmt.Sprintf("Executing %d tool calls...", len(resp.ToolCalls)))
+			// List the tools being called
+			toolNames := make([]string, len(resp.ToolCalls))
+			for i, tc := range resp.ToolCalls {
+				toolNames[i] = tc.Name
+			}
+			r.ui.Log(fmt.Sprintf("🔧 Executing: %s", strings.Join(toolNames, ", ")))
+
 			results, err := r.mcpProxy.HandleToolCalls(ctx, sessionID, resp.ToolCalls)
 			if err != nil {
 				iterLog.Error().Err(err).Msg("mcp proxy failed")
 				return err
 			}
 
-			for _, res := range results {
+			for i, res := range results {
+				// Show brief result for each tool
+				resultPreview := truncateString(res.Digest, 50)
+				r.ui.Log(fmt.Sprintf("   └─ %s → %s", toolNames[i], resultPreview))
 				history = append(history, provider.Message{
 					Role:       "tool",
 					Content:    res.Digest,
@@ -221,8 +252,16 @@ func (r *Runtime) ExecuteSession(ctx context.Context, sessionID string) error {
 
 		if isDoneHint {
 			iterLog.Info().Msg("completion suggested, verifying evidence")
+			r.ui.Log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+			r.ui.Log("🔍 Verifying Evidence...")
+			for _, e := range spec.Evidence {
+				r.ui.Log(fmt.Sprintf("   • Checking: %s", e))
+			}
+
 			if err := r.verifyEvidence(ctx, spec); err != nil {
 				iterLog.Warn().Err(err).Msg("verification failed")
+				r.ui.Log(fmt.Sprintf("❌ Verification failed: %s", err.Error()))
+				r.ui.Log("   └─ Agent will retry...")
 				history = append(history, provider.Message{
 					Role:    "user",
 					Content: fmt.Sprintf("Verification failed: %v. Please correct and ensure the Evidence is present.", err),
@@ -230,25 +269,32 @@ func (r *Runtime) ExecuteSession(ctx context.Context, sessionID string) error {
 				session.Status = "running"
 			} else {
 				iterLog.Info().Msg("verification successful")
+				r.ui.Log("✅ All evidence verified!")
+				r.ui.Log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+				r.ui.Log("📦 Archiving session memory...")
 				session.Status = "completed"
+				r.ui.UpdateStatus("Completed")
 				_ = r.store.UpdateSession(session)
-				
+
 				// 6. Archive Memory
-			summaryReq := append(history, provider.Message{
-					Role: "user",
+				summaryReq := append(history, provider.Message{
+					Role:    "user",
 					Content: "The task is complete. Provide a 1-sentence summary of what was built and key lessons learned for future reference.",
 				})
-			if summaryResp, err := r.provider.Chat(ctx, summaryReq); err == nil {
-				if vec, err := r.provider.Embed(ctx, spec.Goal); err == nil {
-					meta := map[string]string{"session_id": sessionID, "goal": spec.Goal}
-					if err := r.store.AddMemory(summaryResp.Content, vec, meta); err != nil {
-						r.observe.Log().Warn().Err(err).Msg("failed to archive memory")
-					} else {
-						r.observe.Log().Info().Msg("archived session memory")
+				if summaryResp, err := r.provider.Chat(ctx, summaryReq); err == nil {
+					if vec, err := r.provider.Embed(ctx, spec.Goal); err == nil {
+						meta := map[string]string{"session_id": sessionID, "goal": spec.Goal}
+						if err := r.store.AddMemory(summaryResp.Content, vec, meta); err != nil {
+							r.observe.Log().Warn().Err(err).Msg("failed to archive memory")
+						} else {
+							r.observe.Log().Info().Msg("archived session memory")
+							r.ui.Log("✨ Session archived for future reference")
+						}
 					}
 				}
-			}
-			break
+				r.ui.Log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+				r.ui.Log("🎉 Mission Complete!")
+				break
 			}
 		} else {
 			session.Status = "running"
@@ -285,4 +331,32 @@ func (r *Runtime) verifyEvidence(ctx context.Context, spec *coach.TaskSpec) erro
 		}
 	}
 	return nil
+}
+
+// truncateString shortens a string to maxLen characters, adding "..." if truncated
+func truncateString(s string, maxLen int) string {
+	// Remove newlines for cleaner display
+	s = strings.ReplaceAll(s, "\n", " ")
+	s = strings.ReplaceAll(s, "\r", "")
+	if len(s) <= maxLen {
+		return s
+	}
+	return s[:maxLen-3] + "..."
+}
+
+// extractFirstSentence gets the first sentence or first N chars from response
+func extractFirstSentence(s string, maxLen int) string {
+	s = strings.TrimSpace(s)
+	s = strings.ReplaceAll(s, "\n", " ")
+
+	// Find first sentence ending
+	for i, c := range s {
+		if c == '.' || c == '!' || c == '?' {
+			if i < maxLen {
+				return s[:i+1]
+			}
+			break
+		}
+	}
+	return truncateString(s, maxLen)
 }
