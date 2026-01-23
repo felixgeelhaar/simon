@@ -45,3 +45,9 @@ Thumbs.db
 
 # Claude Code local settings
 .claude/
+
+# Relicta release management
+.relicta/
+
+# Playwright MCP
+.playwright-mcp/
