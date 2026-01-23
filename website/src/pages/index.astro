@@ -115,31 +115,31 @@ const recordingChapters = [
 	},
 	{
 		label: 'Guarded execution',
-		time: 28,
-		detail: 'Budgets enforced while the agent iterates safely.'
+		time: 5,
+		detail: 'Budgets enforced while the agent iterates through 7 tool calls.'
 	},
 	{
 		label: 'Evidence check',
-		time: 74,
+		time: 15,
 		detail: 'Outputs verified before the run is marked complete.'
 	},
 	{
 		label: 'Archive + share',
-		time: 110,
+		time: 18,
 		detail: 'Session archived and ready for replay.'
 	}
 ];
 
 const recordingStats = [
 	{
-		label: 'Target episode length',
-		value: '2-4 min',
-		note: 'Short enough to review, long enough to show real work.'
+		label: 'Typical runtime',
+		value: '20-60s',
+		note: 'Fast iterations with real AI providers, depending on task complexity.'
 	},
 	{
-		label: 'Playback density',
+		label: 'Playback speed',
 		value: '1.1x',
-		note: 'Optimized for clarity over speed.'
+		note: 'Optimized for clarity while preserving real execution timing.'
 	},
 	{
 		label: 'Stakeholder handoff',
@@ -311,17 +311,21 @@ const recordingStats = [
 			<div class="mx-auto flex max-w-6xl flex-col gap-6 px-6">
 				<h2 class="text-3xl font-semibold text-white">How to get started</h2>
 				<p class="text-slate-300">
-					Simon is built locally. Clone the repo, build the binary, configure your preferred provider, then run a task with the CLI.
+					Install Simon via Homebrew or build from source, configure your preferred provider, then run a task with the CLI.
 				</p>
 				<pre class="glass-panel rounded-3xl p-6 text-sm text-slate-100">
-git clone https://github.com/felixgeelhaar/simon.git
-cd simon
-go build -o simon cmd/simon/main.go
+# Install via Homebrew (recommended)
+brew install felixgeelhaar/tap/simon
 
-./simon config set openai.api_key your-api-key
-./simon run task.yaml --provider openai
+# Or build from source
+git clone https://github.com/felixgeelhaar/simon.git
+cd simon && go build -o simon cmd/simon/main.go
+
+# Configure and run
+simon config set openai.api_key your-api-key
+simon run task.yaml --provider openai -i
 				</pre>
-				<p class="text-sm text-slate-400">Quick start instructions are pulled directly from the README.</p>
+				<p class="text-sm text-slate-400">The -i flag starts the interactive TUI for real-time execution visibility.</p>
 			</div>
 		</section>
 
@@ -331,8 +335,8 @@ go build -o simon cmd/simon/main.go
 					<div>
 						<h2 class="text-3xl font-semibold text-white">Session playback</h2>
 						<p class="text-slate-300">
-							The hero recording uses the stub provider so it can run without upstream latency or costs, while still showing the full guard
-							and verification workflow.
+							The recording runs against real AI providers (OpenAI, Anthropic, Gemini, or Ollama), demonstrating actual latency, tool calls,
+							and the full guard and verification workflow in production conditions.
 						</p>
 					</div>
 					<div class="grid gap-4" role="group" aria-label="Recording chapters">
