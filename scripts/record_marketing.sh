@@ -54,7 +54,21 @@ case "$RECORD_PROVIDER" in
     ;;
 esac
 
-# 2. Prepare Demo Spec
+# 2. Configure API keys in temp home
+echo "Configuring API keys..."
+case "$RECORD_PROVIDER" in
+  openai)
+    $SIMON_BIN config set openai.api_key "$OPENAI_API_KEY"
+    ;;
+  anthropic)
+    $SIMON_BIN config set anthropic.api_key "$ANTHROPIC_API_KEY"
+    ;;
+  gemini)
+    $SIMON_BIN config set gemini.api_key "$GEMINI_API_KEY"
+    ;;
+esac
+
+# 3. Prepare Demo Spec
 cat <<EOF > demo_task.yaml
 goal: "Create a hello world Go CLI application with proper project structure."
 definition_of_done: "A working Go module with main.go that prints 'Hello, Simon!' when executed."
@@ -64,7 +78,7 @@ EOF
 echo "--- READY FOR RECORDING ---"
 echo "Recording will capture TUI rendering..."
 
-# 3. Record Execution
+# 4. Record Execution
 # We wrap the command to add a 5 second pause at the end so viewers can see the 'Completed' status
 RECORD_CMD="clear; $SIMON_BIN run demo_task.yaml -i --provider $RECORD_PROVIDER --model $RECORD_MODEL; sleep 5"
 
