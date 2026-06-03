@@ -10,7 +10,7 @@ require (
 	github.com/felixgeelhaar/bolt/v3 v3.1.2
 	github.com/google/generative-ai-go v0.20.1
 	github.com/hashicorp/go-plugin v1.7.0
-	github.com/ollama/ollama v0.14.2
+	github.com/ollama/ollama v0.20.3
 	github.com/sashabaranov/go-openai v1.41.2
 	github.com/spf13/cobra v1.10.2
 	go.opentelemetry.io/otel v1.38.0
