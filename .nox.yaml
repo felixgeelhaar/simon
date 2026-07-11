@@ -1,0 +1,46 @@
+# nox configuration — the security/dependency gate that stands in for
+# Dependabot on this repo. Schema reference: https://github.com/nox-hq/nox
+#
+# Only GENERATED, VENDORED, or PROSE/DATA artifacts are excluded here. All
+# first-party Go source — including *_test.go — is scanned. The remaining
+# first-party findings (help/description strings that name env vars, doc URLs,
+# provider-config strings) are documented false positives accepted via
+# .nox/baseline.json, never by blinding whole source directories.
+
+scan:
+  exclude:
+    # Go module checksum database — SHA-256 module digests read as high-entropy
+    # secrets/API keys to the entropy detector. Real dependency CVEs are
+    # surfaced via OSV lookups on go.mod, not go.sum text.
+    # Classification: False Positive (module digests). Last reviewed: 2026-07-11
+    - go.sum
+    - "**/go.sum"
+    # npm lockfile for the docs website (website/, Astro Starlight): integrity
+    # hashes look like API keys to the entropy detector. Dependency CVEs are
+    # surfaced via OSV directly, not the lockfile text.
+    # Classification: False Positive (integrity hashes). Last reviewed: 2026-07-11
+    - "**/package-lock.json"
+    # Markdown is prose — README, docs/, CONTRIBUTING, and the website content.
+    # The secret/PII entropy rules fire on ordinary documentation. High-
+    # confidence real secret patterns are still caught in code, not prose.
+    # Classification: False Positive (prose). Last reviewed: 2026-07-11
+    - README.md
+    - "*.md"
+    - "**/*.md"
+    # Generated protobuf/gRPC Go stubs (internal/plugin/proto/*.pb.go) — machine
+    # output regenerated from .proto; not hand-maintained source to gate on.
+    # Classification: Acceptable Pattern (generated code). Last reviewed: 2026-07-11
+    - "*.pb.go"
+    - "**/*.pb.go"
+    # Test fixtures / golden data.
+    # Classification: Acceptable Pattern (test data). Last reviewed: 2026-07-11
+    - testdata/
+    - "**/testdata/"
+    # nox's own baseline/cache and report output — finding fingerprints are
+    # SHA-256 hex that re-trip the secret detector. Never scan the scanner.
+    # Classification: Acceptable Pattern (scanner state). Last reviewed: 2026-07-11
+    - .nox/
+    - findings.json
+    - nox-results/
+    - "*.sarif"
+    - "**/*.sarif"
