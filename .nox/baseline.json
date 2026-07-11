@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0.0",
+  "entries": [
+    {
+      "fingerprint": "9b2369f13b5aa9dd6a3816934c26075a9cd707ae4b81f073862eeda4615d486c",
+      "rule_id": "",
+      "file_path": "",
+      "severity": "",
+      "reason": "Documented false positives: SEC-801/803 match sensitiveKeys config KEY NAMES (openai_api_key/anthropic_api_key), not secret values; AI-AGENT-001 flags a legitimate OpenAI provider integration file; IAC-351 matches pages:write/id-token:write PERMISSION SCOPES, not hardcoded secrets; IAC-013 is a pre-existing mutable-tag pin in release.yml (out of scope for this PR, must not modify release workflows). Reviewed 2026-07-11.",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-07-11T11:19:09.842465Z"
+    },
+    {
+      "fingerprint": "cb32d96da520c9c12b3acff7ac9cf69b5e3d6a8e22f85b7badf23361282bcc6b",
+      "rule_id": "",
+      "file_path": "",
+      "severity": "",
+      "reason": "Documented false positives: SEC-801/803 match sensitiveKeys config KEY NAMES (openai_api_key/anthropic_api_key), not secret values; AI-AGENT-001 flags a legitimate OpenAI provider integration file; IAC-351 matches pages:write/id-token:write PERMISSION SCOPES, not hardcoded secrets; IAC-013 is a pre-existing mutable-tag pin in release.yml (out of scope for this PR, must not modify release workflows). Reviewed 2026-07-11.",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-07-11T11:19:09.842467Z"
+    },
+    {
+      "fingerprint": "8fd255d5743d67f3593e4f67ab1996fd6bff7f4b04c46981b6329a0c8ae459cb",
+      "rule_id": "",
+      "file_path": "",
+      "severity": "",
+      "reason": "Documented false positives: SEC-801/803 match sensitiveKeys config KEY NAMES (openai_api_key/anthropic_api_key), not secret values; AI-AGENT-001 flags a legitimate OpenAI provider integration file; IAC-351 matches pages:write/id-token:write PERMISSION SCOPES, not hardcoded secrets; IAC-013 is a pre-existing mutable-tag pin in release.yml (out of scope for this PR, must not modify release workflows). Reviewed 2026-07-11.",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-07-11T11:19:09.842467Z"
+    },
+    {
+      "fingerprint": "4da2ab2e8a1568ed77c34c43d4300b9832edda20314f01fae4569a227612fbb8",
+      "rule_id": "",
+      "file_path": "",
+      "severity": "",
+      "reason": "Documented false positives: SEC-801/803 match sensitiveKeys config KEY NAMES (openai_api_key/anthropic_api_key), not secret values; AI-AGENT-001 flags a legitimate OpenAI provider integration file; IAC-351 matches pages:write/id-token:write PERMISSION SCOPES, not hardcoded secrets; IAC-013 is a pre-existing mutable-tag pin in release.yml (out of scope for this PR, must not modify release workflows). Reviewed 2026-07-11.",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-07-11T11:19:09.842492Z"
+    },
+    {
+      "fingerprint": "f2bd4b4a4c48e784ad939ff4d0f830a2aafbbfcbe3588bba5f118416fcb343dd",
+      "rule_id": "",
+      "file_path": "",
+      "severity": "",
+      "reason": "Documented false positives: SEC-801/803 match sensitiveKeys config KEY NAMES (openai_api_key/anthropic_api_key), not secret values; AI-AGENT-001 flags a legitimate OpenAI provider integration file; IAC-351 matches pages:write/id-token:write PERMISSION SCOPES, not hardcoded secrets; IAC-013 is a pre-existing mutable-tag pin in release.yml (out of scope for this PR, must not modify release workflows). Reviewed 2026-07-11.",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-07-11T11:19:09.842492Z"
+    },
+    {
+      "fingerprint": "db5e0d15f90b0d8cfa10ef8c6b6d529db19345ce97d71c5fc862c0e93df9db99",
+      "rule_id": "",
+      "file_path": "",
+      "severity": "",
+      "reason": "Documented false positives: SEC-801/803 match sensitiveKeys config KEY NAMES (openai_api_key/anthropic_api_key), not secret values; AI-AGENT-001 flags a legitimate OpenAI provider integration file; IAC-351 matches pages:write/id-token:write PERMISSION SCOPES, not hardcoded secrets; IAC-013 is a pre-existing mutable-tag pin in release.yml (out of scope for this PR, must not modify release workflows). Reviewed 2026-07-11.",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-07-11T11:19:09.842505Z"
+    }
+  ]
+}
