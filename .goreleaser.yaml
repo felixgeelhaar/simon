@@ -34,17 +34,13 @@ archives:
       - goos: windows
         formats: [zip]
 
-brews:
-  - repository:
-      owner: felixgeelhaar
-      name: homebrew-tap
-      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
-    directory: Formula
-    homepage: "https://github.com/felixgeelhaar/simon"
-    description: "AI Agent Governance Runtime - Deterministic control plane for AI agents."
-    install: |
-      bin.install "simon"
-
+homebrew_casks:
+    - repository:
+        owner: "felixgeelhaar"
+        name: "homebrew-tap"
+        token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
+      homepage: "https://github.com/felixgeelhaar/simon"
+      description: "AI Agent Governance Runtime - Deterministic control plane for AI agents."
 changelog:
   disable: true # Handled by Relicta
 
