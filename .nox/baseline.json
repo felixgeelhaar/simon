@@ -108,6 +108,78 @@
       "reason": "Reviewed: continue-on-error is intentional on the optional taint-analysis plugin install; a registry 404 must not fail the security scan.",
       "owner": "felixgeelhaar",
       "created_at": "2026-11-15T10:27:38.171857Z"
+    },
+    {
+      "fingerprint": "28feb4bce289d8dfcaaa4d56e2793a202c7f988718a1299c81b8c0ce29f34845",
+      "rule_id": "IAC-310",
+      "file_path": ".github/workflows/nox-scan.yml",
+      "severity": "medium",
+      "reason": "Reviewed: continue-on-error on the optional taint-analysis plugin install is intentional (registry 404s are not a security failure); the scan itself still runs and gates.",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-11-15T10:42:54.158858Z"
+    },
+    {
+      "fingerprint": "0d8d618e19ad6b5e126aceaf9f1523ce9172ee896b065d366045aebffb55958d",
+      "rule_id": "AI-006",
+      "file_path": "internal/runtime/runtime.go",
+      "severity": "medium",
+      "reason": "Reviewed false positive: a UI log line 'Verifying Evidence', not an AI tool call or agent loop.",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-11-15T10:43:03.885806Z"
+    },
+    {
+      "fingerprint": "9ec59924b92aa5e5358e65d417fe390ba788e489191bf05f34753594d1959bcd",
+      "rule_id": "SEC-161",
+      "file_path": "internal/credential/credential_test.go",
+      "severity": "medium",
+      "reason": "Reviewed false positive: synthetic credential fixtures in a unit test (internal/credential/credential_test.go).",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-11-15T10:43:15.029513Z"
+    },
+    {
+      "fingerprint": "7c9c34f8cf4a37f2afd7c3e67020778dad2124f7a40abd174e94dfe3dde8010c",
+      "rule_id": "SEC-162",
+      "file_path": "internal/credential/credential_test.go",
+      "severity": "medium",
+      "reason": "Reviewed false positive: synthetic credential fixtures in a unit test.",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-11-15T10:43:26.826121Z"
+    },
+    {
+      "fingerprint": "4b6b414e795d20233d93a22b12f3b00d6b68cf7d43ea2ff2d7cab6e85a7e6196",
+      "rule_id": "SEC-163",
+      "file_path": "internal/credential/credential_test.go",
+      "severity": "medium",
+      "reason": "Reviewed false positive: test fixture strings and Anthropic token-usage counters (InputTokens/OutputTokens), not secrets.",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-11-15T10:43:30.34055Z"
+    },
+    {
+      "fingerprint": "b88386951086da9827111ee7a375daf687f2d55249dc595a6d5309be89292a24",
+      "rule_id": "SEC-163",
+      "file_path": "internal/credential/credential_test.go",
+      "severity": "medium",
+      "reason": "Reviewed false positive: test fixture strings and Anthropic token-usage counters (InputTokens/OutputTokens), not secrets.",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-11-15T10:43:30.34055Z"
+    },
+    {
+      "fingerprint": "f6deaef37ed53c6a1b350eb06384e4355d1a0ef7da9477a5b8bfe8991aecbe19",
+      "rule_id": "SEC-163",
+      "file_path": "internal/provider/anthropic.go",
+      "severity": "medium",
+      "reason": "Reviewed false positive: test fixture strings and Anthropic token-usage counters (InputTokens/OutputTokens), not secrets.",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-11-15T10:43:30.34055Z"
+    },
+    {
+      "fingerprint": "feeb4c72fee1e8f58620c2fbd78d0fb7bf40c335bbf6ebe67dbc09e720bf1750",
+      "rule_id": "SEC-163",
+      "file_path": "internal/provider/anthropic.go",
+      "severity": "medium",
+      "reason": "Reviewed false positive: test fixture strings and Anthropic token-usage counters (InputTokens/OutputTokens), not secrets.",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-11-15T10:43:30.34055Z"
     }
   ]
 }
