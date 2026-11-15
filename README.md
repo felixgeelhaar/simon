@@ -1,5 +1,7 @@
 # Simon — AI Agent Governance Runtime 🧙‍♂️
 
+[![nox security grade](.github/nox-badge.svg)](.github/workflows/nox-scan.yml)
+
 Simon is a local-first infrastructure layer designed to govern AI agent execution. It acts as a deterministic control plane that enforces clarity, discipline, and resource limits to make AI coding tools more predictable, secure, and cost-effective.
 
 ---
