@@ -54,6 +54,60 @@
       "reason": "Documented false positives: SEC-801/803 match sensitiveKeys config KEY NAMES (openai_api_key/anthropic_api_key), not secret values; AI-AGENT-001 flags a legitimate OpenAI provider integration file; IAC-351 matches pages:write/id-token:write PERMISSION SCOPES, not hardcoded secrets; IAC-013 is a pre-existing mutable-tag pin in release.yml (out of scope for this PR, must not modify release workflows). Reviewed 2026-07-11.",
       "owner": "felixgeelhaar",
       "created_at": "2026-07-11T11:19:09.842505Z"
+    },
+    {
+      "fingerprint": "c4860348567814cceac33ff74ef04500f4a86e34172aa55de81c8c0fbb10b2aa",
+      "rule_id": "IAC-306",
+      "file_path": ".github/workflows/deploy-website.yml",
+      "severity": "medium",
+      "reason": "Reviewed: id-token:write is required by actions/deploy-pages to publish to GitHub Pages; scoped to the deploy job only (build job has contents:read).",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-11-15T10:27:15.846856Z"
+    },
+    {
+      "fingerprint": "8378df7a1d4adb5806616a668bc89e456b48fe9b7212ca5799b5b8eddbe0ae9c",
+      "rule_id": "IAC-314",
+      "file_path": ".github/workflows/nox-remediate.yml",
+      "severity": "medium",
+      "reason": "Reviewed: contents:write is required to create the GitHub release (release.yml) and to push the remediation branch (nox-remediate.yml); tag/schedule triggered only.",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-11-15T10:27:25.207004Z"
+    },
+    {
+      "fingerprint": "e37e2faa5f7d812400d1323a31d22e93b710b881ea06f3b656d724454d47a8f4",
+      "rule_id": "IAC-314",
+      "file_path": ".github/workflows/release.yml",
+      "severity": "low",
+      "reason": "Reviewed: contents:write is required to create the GitHub release (release.yml) and to push the remediation branch (nox-remediate.yml); tag/schedule triggered only.",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-11-15T10:27:25.207004Z"
+    },
+    {
+      "fingerprint": "efffd45e45bdf218052ebd23a0a2fc2295219290f6341d868fed455c871b6993",
+      "rule_id": "IAC-155",
+      "file_path": ".github/workflows/nox-remediate.yml",
+      "severity": "medium",
+      "reason": "Reviewed: nox-remediate is intentionally runnable by hand next to its weekly schedule; workflow_dispatch is limited to repo writers and runs the org reusable workflow.",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-11-15T10:27:32.611354Z"
+    },
+    {
+      "fingerprint": "52922952e40b8c5ebd4fef0969dd782d57266e9ecccc4e9bddc9be74f0f6daa2",
+      "rule_id": "IAC-308",
+      "file_path": ".github/workflows/nox-remediate.yml",
+      "severity": "low",
+      "reason": "Reviewed: nox-remediate is intentionally runnable by hand next to its weekly schedule; workflow_dispatch is limited to repo writers and runs the org reusable workflow.",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-11-15T10:27:32.611354Z"
+    },
+    {
+      "fingerprint": "739e462b5efd69933915ec7ad09def3fc36e907a51f855cc4986fe4b7c05c1b8",
+      "rule_id": "IAC-018",
+      "file_path": ".github/workflows/nox-scan.yml",
+      "severity": "low",
+      "reason": "Reviewed: continue-on-error is intentional on the optional taint-analysis plugin install; a registry 404 must not fail the security scan.",
+      "owner": "felixgeelhaar",
+      "created_at": "2026-11-15T10:27:38.171857Z"
     }
   ]
 }
